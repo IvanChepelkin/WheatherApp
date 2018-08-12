@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">WheatherApp</string>
+    <string name="offer">Выберите город:</string>
+    <string name="textForButton">Погода</string>
+    <string name="weather_Result">Прогноз погоды</string>
+
+    <!-- Создаём массив городов -->
+
+    <string-array name="cityGroup">
+        <item>Москва</item>
+        <item>Санкт-Петербург</item>
+        <item>Екатеринбург</item>
+        <item>Казань</item>
+        <item>Краснодар</item>
+    </string-array>
+
+    <string-array name="weather">
+        <item>+25, Облачно </item>
+        <item>+31, Дожди </item>
+        <item>+15, Пасмурно</item>
+        <item>+19, Град</item>
+        <item>+35, Солнечно</item>
+    </string-array>
+</resources>
