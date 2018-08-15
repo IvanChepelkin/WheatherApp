@@ -1,6 +1,7 @@
 package com.example.ivanchepelkin.wheatherapp;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -13,11 +14,11 @@ import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
     // Объявляем наши вью
-    private TextView getWeather;
     private Spinner setCity;
     private Button button;
     private SharedPreferences shareP;
     final String SAVED_TEXT = "saved_text";
+    static final String textInputKey = "textInputKey";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +32,6 @@ public class MainActivity extends AppCompatActivity {
 
     // метод инициаизирует вьюшки через id
     private void initViews() {
-        getWeather = findViewById(R.id.result);
         setCity = findViewById(R.id.spinnerForCities);
         button = findViewById(R.id.button_show_weather);
     }
@@ -41,8 +41,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String text = CitySpec.getCity(MainActivity.this, setCity.getSelectedItemPosition());
-                getWeather.setText(text);
                 saveText(setCity.getSelectedItemPosition()); //отправляем на сохранение позицию
+                // Объявляем intent и в его конструктор передаем Context и Activity, которую хотим открыть
+                Intent intent = new Intent(MainActivity.this, DisplayWheatherActivity.class);
+                // Кладем в Intent строку putExtra(ключ, значение)
+                intent.putExtra(textInputKey,text);
+                //Запускаем вызов DisplayWheatherActivity
+                startActivity(intent);
             }
         });
         }
@@ -61,8 +66,6 @@ public class MainActivity extends AppCompatActivity {
         ed.putString(SAVED_TEXT, pos);
         //сохраняем данныеZ
         ed.commit();
-        //выводим сообщение "Text saved"
-        Toast.makeText(this, "Text saved", Toast.LENGTH_SHORT).show();
     }
 
     //вывод сохраненных данных
@@ -77,8 +80,7 @@ public class MainActivity extends AppCompatActivity {
             pos = Integer.parseInt(savedPos);
             //задаем ее в спинере
             setCity.setSelection(pos);
-            //выводим сообщение "Text loaded"
-            Toast.makeText(this, "Text loaded", Toast.LENGTH_SHORT).show();
+
         }
     }
 }
