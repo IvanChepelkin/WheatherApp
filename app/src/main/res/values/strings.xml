@@ -3,6 +3,8 @@
     <string name="offer">Выберите город:</string>
     <string name="textForButton">Погода</string>
     <string name="weather_Result">Прогноз погоды</string>
+    <string name="send_Result">Поделиться</string>
+    <string name="chooser_title">Сделать выбор</string>
 
     <!-- Создаём массив городов -->
 
