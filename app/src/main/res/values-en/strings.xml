@@ -5,6 +5,7 @@
     <string name="weather_Result">Weather forecast</string>
     <string name="send_Result">Share</string>
     <string name="chooser_title">Make a choice</string>
+    <string name="no_app">No App found</string>
 
     <!-- Создаём массив городов -->
 

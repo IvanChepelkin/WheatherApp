@@ -12,11 +12,12 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener{
     // Объявляем наши вью
     private Spinner setCity;
     private Button button;
     private SharedPreferences shareP;
+    private TextView count;
     final String SAVED_TEXT = "saved_text";
     static final String textInputKey = "textInputKey";
 
@@ -26,32 +27,20 @@ public class MainActivity extends AppCompatActivity {
         //указываем, какой макет отображать
         setContentView(R.layout.activity_main);
         initViews();
-        setResultBtnClick();
-        loadText();  //загружаем последний выбор спинера
+        setOnClickListeners();
+        loadText();  //загружаем последний выбор спинер
     }
 
     // метод инициаизирует вьюшки через id
     private void initViews() {
         setCity = findViewById(R.id.spinnerForCities);
         button = findViewById(R.id.button_show_weather);
+        count = findViewById(R.id.count);
     }
 
-    private void setResultBtnClick() {
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String text = CitySpec.getCity(MainActivity.this, setCity.getSelectedItemPosition());
-                saveText(setCity.getSelectedItemPosition()); //отправляем на сохранение позицию
-                // Объявляем intent и в его конструктор передаем Context и Activity, которую хотим открыть
-                Intent intent = new Intent(MainActivity.this, DisplayWheatherActivity.class);
-                // Кладем в Intent строку putExtra(ключ, значение)
-                intent.putExtra(textInputKey,text);
-                //Запускаем вызов DisplayWheatherActivity
-                startActivity(intent);
-            }
-        });
-        }
-
+    private void setOnClickListeners(){
+        button.setOnClickListener(MainActivity.this);
+    }
     // сохранение данных
     void saveText(int position) {
         //делаем позицию типом String, иначе метод putString не воспринимает
@@ -76,11 +65,36 @@ public class MainActivity extends AppCompatActivity {
         // - это имя, и значение по умолчанию (пустая строка)
         String savedPos = shareP.getString(SAVED_TEXT, "");
         //переделываем сохраненную pos обратно в int
-        if(savedPos != "") {
+        if (savedPos != "") {
             pos = Integer.parseInt(savedPos);
             //задаем ее в спинере
             setCity.setSelection(pos);
 
         }
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (v.getId() == R.id.button_show_weather) {
+                String text = CitySpec.getCity(MainActivity.this, setCity.getSelectedItemPosition());
+                saveText(setCity.getSelectedItemPosition()); //отправляем на сохранение позицию
+                // Объявляем intent и в его конструктор передаем Context и Activity, которую хотим открыть
+                Intent intent = new Intent(MainActivity.this, DisplayWheatherActivity.class);
+                // Кладем в Intent строку putExtra(ключ, значение)
+                intent.putExtra(textInputKey, text);
+                //Запускаем вызов DisplayWheatherActivity
+                startActivityForResult(intent,1);
+            }
+
+    }
+    //метод ожидает ответ от 2 экрана, он переопределенный
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data){
+        if (resultCode == RESULT_OK){
+            String inputCount = data.getStringExtra("name");
+            //выводи наши данные
+            count.setText(inputCount);
+        }
+
     }
 }
