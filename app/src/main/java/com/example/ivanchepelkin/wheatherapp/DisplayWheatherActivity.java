@@ -28,7 +28,6 @@ public class DisplayWheatherActivity extends AppCompatActivity implements View.O
         initViews();
         setOnClickListeners();
         displayText();
-        //   shareResult();
     }
     @Override
     protected void onStart() {
@@ -63,14 +62,11 @@ public class DisplayWheatherActivity extends AppCompatActivity implements View.O
     @Override
     public  void onBackPressed(){
         cnt = cnt +1;
-        //делае cnt типом String
         String cntString = String.valueOf(cnt);
         Intent intent = new Intent();
         intent.putExtra("name",cntString);
-        //передаем RESULT OK - константа успешного вызова и наш intent
-        setResult(RESULT_OK,intent);
-        //закрываем активность
-        finish();
+        setResult(RESULT_OK,intent); //передаем RESULT OK - константа успешного вызова и наш intent
+        finish();//закрываем активность
     }
 
 
@@ -87,32 +83,21 @@ public class DisplayWheatherActivity extends AppCompatActivity implements View.O
     private void displayText() {
         Intent intent = getIntent();
         if (intent != null) {
-            // находим по ключу наш текст
-            textWheather = intent.getStringExtra(MainActivity.textInputKey);
-            // Задаем текст
+            textWheather = intent.getStringExtra(MainActivity.textInputKey); // находим по ключу наш текст
             textView.setText(textWheather);
         }
     }
-
 
     @Override
     public void onClick(View v) {
 
         if (v.getId() == R.id.button_send_Message) {
-            // задаем неявный интент для отправки сообщением
             Intent intent = new Intent(Intent.ACTION_SEND);
-            //задаем тип передаваемых данных
             String sendResult = textView.getText().toString();
-            intent.setType("text/plain");
-            // Помещаем в Intent строку putExtra(ключs значение)
+            intent.setType("text/plain");//задаем тип передаваемых данных
             intent.putExtra(keySendResult, sendResult);
-            // Пишем заголовок для окна выбора
             String chooserTitle = getString(R.string.chooser_title);
-            // Создаем chooser
             Intent chosenIntent = Intent.createChooser(intent, chooserTitle);
-            //способ обработки метода startActivity() неявного Intent,
-            // который позволит не закрываться аварийно вашему приложению
-            // при отсутствии в системе Activity, имеющей нужный Action.
             try {
                 startActivity(chosenIntent);
             } catch (ActivityNotFoundException e) {

@@ -14,7 +14,7 @@ import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
     private static final String TAG = MainActivity.class.getSimpleName();
-    // Объявляем наши вью
+
     private Spinner setCity;
     private Button button;
     private SharedPreferences shareP;
@@ -31,12 +31,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         Log.i(TAG, "запуск onCreate");
         super.onCreate(savedInstanceState);
-        //указываем, какой макет отображать
         setContentView(R.layout.activity_main);
         initViews();
         setOnClickListeners();
-        chekBundle(savedInstanceState); //метож проверки bundke
-        loadText();  //загружаем последний выбор спинер
+        chekBundle(savedInstanceState); //метод проверки bundle
+        loadText();  //загружаем последний выбор спинера
     }
 
     @Override
@@ -69,7 +68,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Log.i(TAG, "запуск onDestroy MainActivity");
     }
 
-    // переопределяем метод сохранение нашего Bundle
+    // Метод сохранения данных при пересоздании Activity
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -88,42 +87,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void setOnClickListeners(){
         button.setOnClickListener(MainActivity.this);
     }
-
+ // метод вывода данных после сохранения при пересоздании Activity
     private void chekBundle(Bundle savedInstanceState){
-        if (savedInstanceState != null){ //activity равно null только при первом запуске приложения
-            // или когда activity уничтожалась
+        if (savedInstanceState != null){
             inputCount = savedInstanceState.getString(KEY_inputCount); //извлекаем данные счетчика
             countText.setText(inputCount);
             setCity.setSelection(savedInstanceState.getInt(KEY_POSITION_setCity)); // извлекаю данные позицию спинера
-
         }
     }
     // сохранение данных
     void saveText(int position) {
-        //делаем позицию типом String, иначе метод putString не воспринимает
         String pos = String.valueOf(position);
-        //Константа MODE_PRIVATE используется для настройки доступа и означает,
-        // что после сохранения, данные будут видны только этому приложению
-        shareP = getPreferences(MODE_PRIVATE);
-        //чтобы редактировать данные, необходим объект Editor
-        SharedPreferences.Editor ed = shareP.edit();
-        //В метод putString указываем наименование переменной – это константа SAVED_TEXT,
-        // и значение – последняя позиция спинера
+        shareP = getPreferences(MODE_PRIVATE);//Константа MODE_PRIVATE используется для настройки доступа
+        SharedPreferences.Editor ed = shareP.edit(); //чтобы редактировать данные, необходим объект Editor
         ed.putString(SAVED_TEXT, pos);
-        //сохраняем данныеZ
         ed.apply();
     }
     //вывод сохраненных данных
     void loadText() {
         shareP = getPreferences(MODE_PRIVATE);
         int pos;
-        //Читаем с помощью метода getString – в параметрах указываем константу
-        // - это имя, и значение по умолчанию (пустая строка)
         String savedPos = shareP.getString(SAVED_TEXT, "");
-        //переделываем сохраненную pos обратно в int
         if (savedPos != "") {
             pos = Integer.parseInt(savedPos);
-            //задаем ее в спинере
             setCity.setSelection(pos);
         }
     }
@@ -133,11 +119,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (v.getId() == R.id.button_show_weather) {
                 String text = CitySpec.getCity(MainActivity.this, setCity.getSelectedItemPosition());
                 saveText(setCity.getSelectedItemPosition()); //отправляем на сохранение позицию
-                // Объявляем intent и в его конструктор передаем Context и Activity, которую хотим открыть
                 Intent intent = new Intent(MainActivity.this, DisplayWheatherActivity.class);
-                // Кладем в Intent строку putExtra(ключ, значение)
-                intent.putExtra(textInputKey, text);
-                //Запускаем вызов DisplayWheatherActivity
+                intent.putExtra(textInputKey, text); // Кладем в Intent строку putExtra(ключ, значение)
                 startActivityForResult(intent,1);
             }
     }
@@ -146,7 +129,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         if (resultCode == RESULT_OK){
             inputCount = data.getStringExtra("name");
-            //выводи наши данные
             countText.setText(inputCount);
         }
     }
