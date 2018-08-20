@@ -1,25 +1,28 @@
 package com.example.ivanchepelkin.wheatherapp;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
     // Объявляем наши вью
     private Spinner setCity;
     private Button button;
     private SharedPreferences shareP;
-    private TextView count;
+    private TextView countText;
     final String SAVED_TEXT = "saved_text";
+
     static final String textInputKey = "textInputKey";
+    private static final String KEY_POSITION_setCity = "KEY_POSITION_setCity";
+
+    private static final String KEY_inputCount = "KEY_inputCount";
+    private String inputCount = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,18 +31,44 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         initViews();
         setOnClickListeners();
+        chekBundle(savedInstanceState); //метож проверки bundke
         loadText();  //загружаем последний выбор спинер
+    }
+    // переопределяем метод сохранение нашего Bundle
+//    @Override
+//    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+//        outState.putString(KEY_inputCount,inputCount); //вносим  по ключу переменнюю
+//        super.onSaveInstanceState(outState, outPersistentState);//сохраняем
+//    }
+
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(KEY_inputCount,inputCount); //вносим  по ключу переменнюю
+        outState.putInt(KEY_POSITION_setCity,setCity.getSelectedItemPosition()); //
+
     }
 
     // метод инициаизирует вьюшки через id
     private void initViews() {
         setCity = findViewById(R.id.spinnerForCities);
         button = findViewById(R.id.button_show_weather);
-        count = findViewById(R.id.count);
+        countText = findViewById(R.id.count);
     }
 
     private void setOnClickListeners(){
         button.setOnClickListener(MainActivity.this);
+    }
+
+    private void chekBundle(Bundle savedInstanceState){
+        if (savedInstanceState != null){ //activity равно null только при первом запуске приложения
+            // или когда activity уничтожалась
+            inputCount = savedInstanceState.getString(KEY_inputCount); //извлекаем данные
+            countText.setText(inputCount);
+            setCity.setSelection(savedInstanceState.getInt(KEY_POSITION_setCity));
+
+        }
     }
     // сохранение данных
     void saveText(int position) {
@@ -54,9 +83,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // и значение – последняя позиция спинера
         ed.putString(SAVED_TEXT, pos);
         //сохраняем данныеZ
-        ed.commit();
+        ed.apply();
     }
-
     //вывод сохраненных данных
     void loadText() {
         shareP = getPreferences(MODE_PRIVATE);
@@ -69,7 +97,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             pos = Integer.parseInt(savedPos);
             //задаем ее в спинере
             setCity.setSelection(pos);
-
         }
     }
 
@@ -85,16 +112,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 //Запускаем вызов DisplayWheatherActivity
                 startActivityForResult(intent,1);
             }
-
     }
     //метод ожидает ответ от 2 экрана, он переопределенный
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         if (resultCode == RESULT_OK){
-            String inputCount = data.getStringExtra("name");
+            inputCount = data.getStringExtra("name");
             //выводи наши данные
-            count.setText(inputCount);
+            countText.setText(inputCount);
         }
-
     }
 }

@@ -1,6 +1,5 @@
 package com.example.ivanchepelkin.wheatherapp;
 
-import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -14,8 +13,7 @@ public class DisplayWheatherActivity extends AppCompatActivity implements View.O
     TextView textView;
     Button button;
     String textWheather;
-    static private String keySendResult = "keySendResult";
-    static private String keyCnt = "keyCnt";
+    static final String keySendResult = "keySendResult";
     static int cnt = 0;
 
 
@@ -72,9 +70,10 @@ public class DisplayWheatherActivity extends AppCompatActivity implements View.O
             // задаем неявный интент для отправки сообщением
             Intent intent = new Intent(Intent.ACTION_SEND);
             //задаем тип передаваемых данных
+            String sendResult = textView.getText().toString();
             intent.setType("text/plain");
-            // Помещаем в Intent строку putExtra(ключ, значение)
-            intent.putExtra(keySendResult, textWheather);
+            // Помещаем в Intent строку putExtra(ключs значение)
+            intent.putExtra(keySendResult, sendResult);
             // Пишем заголовок для окна выбора
             String chooserTitle = getString(R.string.chooser_title);
             // Создаем chooser
@@ -89,6 +88,11 @@ public class DisplayWheatherActivity extends AppCompatActivity implements View.O
                 e.printStackTrace();
             }
         }
+    }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        System.out.println("Закрылось к хуям");
     }
 }
