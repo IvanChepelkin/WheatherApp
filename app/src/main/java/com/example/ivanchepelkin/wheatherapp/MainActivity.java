@@ -2,15 +2,18 @@ package com.example.ivanchepelkin.wheatherapp;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.nfc.Tag;
 import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
+    private static final String TAG = MainActivity.class.getSimpleName();
     // Объявляем наши вью
     private Spinner setCity;
     private Button button;
@@ -26,6 +29,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.i(TAG, "запуск onCreate");
         super.onCreate(savedInstanceState);
         //указываем, какой макет отображать
         setContentView(R.layout.activity_main);
@@ -34,19 +38,43 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         chekBundle(savedInstanceState); //метож проверки bundke
         loadText();  //загружаем последний выбор спинер
     }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.i(TAG, "запуск onStart MainActivity");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.i(TAG, "запуск onResume MainActivity");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.i(TAG, "запуск onPause MainActivity");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.i(TAG, "запуск onStop MainActivity");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.i(TAG, "запуск onDestroy MainActivity");
+    }
+
     // переопределяем метод сохранение нашего Bundle
-//    @Override
-//    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
-//        outState.putString(KEY_inputCount,inputCount); //вносим  по ключу переменнюю
-//        super.onSaveInstanceState(outState, outPersistentState);//сохраняем
-//    }
-
-
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString(KEY_inputCount,inputCount); //вносим  по ключу переменнюю
-        outState.putInt(KEY_POSITION_setCity,setCity.getSelectedItemPosition()); //
+        outState.putString(KEY_inputCount,inputCount); //сохраняю по ключу переменнуюю count
+        outState.putInt(KEY_POSITION_setCity,setCity.getSelectedItemPosition()); //сохраняю по ключу позицию спинера
 
     }
 
@@ -64,9 +92,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void chekBundle(Bundle savedInstanceState){
         if (savedInstanceState != null){ //activity равно null только при первом запуске приложения
             // или когда activity уничтожалась
-            inputCount = savedInstanceState.getString(KEY_inputCount); //извлекаем данные
+            inputCount = savedInstanceState.getString(KEY_inputCount); //извлекаем данные счетчика
             countText.setText(inputCount);
-            setCity.setSelection(savedInstanceState.getInt(KEY_POSITION_setCity));
+            setCity.setSelection(savedInstanceState.getInt(KEY_POSITION_setCity)); // извлекаю данные позицию спинера
 
         }
     }
