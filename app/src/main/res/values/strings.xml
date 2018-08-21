@@ -7,6 +7,9 @@
     <string name="chooser_title">Сделать выбор</string>
     <string name="no_app">Не найдено ни одного приложения</string>
     <string name="count_value">Количество переходов на основной экран:</string>
+    <string name="давление">Давление</string>
+    <string name="погодаНаЗавтра">Погода на завтра</string>
+    <string name="ПогодаНаНеделю">Погода на неделю</string>
 
     <!-- Создаём массив городов -->
 
