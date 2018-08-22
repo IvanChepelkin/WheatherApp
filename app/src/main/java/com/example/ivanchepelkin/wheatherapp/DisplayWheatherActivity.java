@@ -96,8 +96,11 @@ public class DisplayWheatherActivity extends AppCompatActivity implements View.O
             textWheather = intent.getStringExtra(MainActivity.textInputKey); // находим по ключу наш текст
             textView.setText(textWheather);
 
+
             textPressure = intent.getStringExtra(MainActivity.keyPressure);
-            displayPressure.setText(getString(R.string.давление)+ getString(R.string.двоеточие) + textPressure);
+            if (textPressure !=null ) {
+                displayPressure.setText(getString(R.string.давление) + getString(R.string.двоеточие) + textPressure);
+            }
 
             textWeatherDay = intent.getStringExtra(MainActivity.keyWeatherDay);
             displayWeatherDay.setText(textWeatherDay);
