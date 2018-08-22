@@ -22,9 +22,9 @@ public class DisplayWheatherActivity extends AppCompatActivity implements View.O
     String textWheather;
     String textPressure;
     String textWeatherDay;
+    String textWeatherWeek;
     static final String keySendResult = "keySendResult";
     static int cnt = 0;
-
 
 
     @Override
@@ -96,14 +96,18 @@ public class DisplayWheatherActivity extends AppCompatActivity implements View.O
             textWheather = intent.getStringExtra(MainActivity.textInputKey); // находим по ключу наш текст
             textView.setText(textWheather);
 
-
             textPressure = intent.getStringExtra(MainActivity.keyPressure);
+
             if (textPressure !=null ) {
                 displayPressure.setText(getString(R.string.давление) + getString(R.string.двоеточие) + textPressure);
             }
 
             textWeatherDay = intent.getStringExtra(MainActivity.keyWeatherDay);
-            displayWeatherDay.setText(textWeatherDay);
+
+            if (textWeatherDay != null ){
+                displayWeatherDay.setText(getString(R.string.погодаНаЗавтра) + getString(R.string.двоеточие)  +textWeatherDay);
+            }
+
         }
     }
 

@@ -10,7 +10,7 @@
     <string name="давление">Давление</string>
     <string name="погодаНаЗавтра">Погода на завтра</string>
     <string name="ПогодаНаНеделю">Погода на неделю</string>
-    <string name="двоеточие">: </string>
+    <string name="двоеточие">:  </string>
 
     <!-- Создаём массив городов -->
 

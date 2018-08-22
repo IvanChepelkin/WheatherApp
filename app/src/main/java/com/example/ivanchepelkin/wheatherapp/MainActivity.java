@@ -22,6 +22,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private CheckBox weatherWeekChek;
     private TextView countText;
     final String SAVED_TEXT = "saved_text";
+    final String SAVED_CHECK_BOX1 = "saved_chek_box1";
+    final String SAVED_CHECK_BOX2 = "saved_chek_box2";
+    final String SAVED_CHECK_BOX3 = "saved_chek_box3";
 
     static final String textInputKey = "textInputKey";
     static final String keyPressure = "keyPressure";
@@ -42,6 +45,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setOnClickListeners();
         chekBundle(savedInstanceState); //метод проверки bundle
         loadText();  //загружаем последний выбор спинера
+        loadCheckBoxPosition();
     }
 
     @Override
@@ -114,6 +118,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         ed.putString(SAVED_TEXT, pos);
         ed.apply();
     }
+    void saveChekBoxPosition(boolean position, CheckBox checkBox){
+        shareP = getPreferences(MODE_PRIVATE);//Константа MODE_PRIVATE используется для настройки доступа
+        SharedPreferences.Editor ed = shareP.edit(); //чтобы редактировать данные, необходим объект Editor
+
+        if (checkBox == pressureChek) {
+            ed.putBoolean(SAVED_CHECK_BOX1, position);
+        } else if (checkBox == weatherDayChek) {
+            ed.putBoolean(SAVED_CHECK_BOX2, position);
+        } else if (checkBox == weatherWeekChek) {
+            ed.putBoolean(SAVED_CHECK_BOX3, position);
+        }
+        ed.apply();
+    }
     //вывод сохраненных данных
     void loadText() {
         shareP = getPreferences(MODE_PRIVATE);
@@ -122,6 +139,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (!savedPos.equals("")) {
             pos = Integer.parseInt(savedPos);
             setCity.setSelection(pos);
+        }
+    }
+    void loadCheckBoxPosition() {
+        shareP = getPreferences(MODE_PRIVATE);
+        Boolean savedCheckBoxPosition = shareP.getBoolean(SAVED_CHECK_BOX1,true);
+        if (!savedCheckBoxPosition) {
+            pressureChek.setChecked(false);
         }
     }
     @Override
@@ -134,14 +158,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             if (pressureChek.isChecked()){
                 String pressure = CitySpec.getPressure(MainActivity.this,setCity.getSelectedItemPosition() );
                 intent.putExtra(keyPressure,pressure );
+                saveChekBoxPosition(pressureChek.isChecked(),pressureChek);
             }
             if (weatherDayChek.isChecked()){
                 String weatherDay = CitySpec.getWeatherDay(MainActivity.this,setCity.getSelectedItemPosition());
                 intent.putExtra(keyWeatherDay,weatherDay);
+                saveChekBoxPosition(pressureChek.isChecked(),weatherDayChek);
             }
             if (weatherWeekChek.isChecked()){
                 String weatherWeek = CitySpec.getWeatherWeek(MainActivity.this,setCity.getSelectedItemPosition());
-                intent.putExtra(keyWeatherDay,weatherWeek);
+                intent.putExtra(keyWeatherWeek,weatherWeek);
+                saveChekBoxPosition(pressureChek.isChecked(),weatherWeekChek);
             }
 
             String text = CitySpec.getCity(MainActivity.this, setCity.getSelectedItemPosition());
