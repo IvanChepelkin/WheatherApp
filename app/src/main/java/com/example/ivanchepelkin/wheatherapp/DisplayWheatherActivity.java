@@ -13,8 +13,15 @@ import android.widget.Toast;
 public class DisplayWheatherActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = MainActivity.class.getSimpleName();
     TextView textView;
+    TextView displayPressure;
+    TextView displayWeatherDay;
+    TextView displayWeatherWeek;
+
     Button button;
+
     String textWheather;
+    String textPressure;
+    String textWeatherDay;
     static final String keySendResult = "keySendResult";
     static int cnt = 0;
 
@@ -73,6 +80,9 @@ public class DisplayWheatherActivity extends AppCompatActivity implements View.O
     private void initViews() {
         textView = findViewById(R.id.dispayWheather);
         button = findViewById(R.id.button_send_Message);
+        displayPressure = findViewById(R.id.dispayPressure);
+        displayWeatherDay = findViewById(R.id.dispayWeatherDay);
+        displayWeatherWeek = findViewById(R.id.dispayWeatherWeek);
     }
 
     private void setOnClickListeners() {
@@ -85,6 +95,12 @@ public class DisplayWheatherActivity extends AppCompatActivity implements View.O
         if (intent != null) {
             textWheather = intent.getStringExtra(MainActivity.textInputKey); // находим по ключу наш текст
             textView.setText(textWheather);
+
+            textPressure = intent.getStringExtra(MainActivity.keyPressure);
+            displayPressure.setText(getString(R.string.давление)+ getString(R.string.двоеточие) + textPressure);
+
+            textWeatherDay = intent.getStringExtra(MainActivity.keyWeatherDay);
+            displayWeatherDay.setText(textWeatherDay);
         }
     }
 

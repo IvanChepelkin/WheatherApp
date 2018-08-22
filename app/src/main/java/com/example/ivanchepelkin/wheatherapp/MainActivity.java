@@ -24,6 +24,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     final String SAVED_TEXT = "saved_text";
 
     static final String textInputKey = "textInputKey";
+    static final String keyPressure = "keyPressure";
+    static final String keyWeatherDay = "keyWeatherDay";
+    static final String keyWeatherWeek = "WeatherWeek";
+
     private static final String KEY_POSITION_setCity = "KEY_POSITION_setCity";
 
     private static final String KEY_inputCount = "KEY_inputCount";
@@ -76,7 +80,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onSaveInstanceState(outState);
         outState.putString(KEY_inputCount,inputCount); //сохраняю по ключу переменнуюю count
         outState.putInt(KEY_POSITION_setCity,setCity.getSelectedItemPosition()); //сохраняю по ключу позицию спинера
-
     }
 
     // метод инициаизирует вьюшки через id
@@ -121,16 +124,32 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             setCity.setSelection(pos);
         }
     }
-
     @Override
     public void onClick(View v) {
+
+        Intent intent = new Intent(MainActivity.this, DisplayWheatherActivity.class);
+
         if (v.getId() == R.id.button_show_weather) {
-                String text = CitySpec.getCity(MainActivity.this, setCity.getSelectedItemPosition());
-                saveText(setCity.getSelectedItemPosition()); //отправляем на сохранение позицию
-                Intent intent = new Intent(MainActivity.this, DisplayWheatherActivity.class);
-                intent.putExtra(textInputKey, text); // Кладем в Intent строку putExtra(ключ, значение)
-                startActivityForResult(intent,1);
+
+            if (pressureChek.isChecked()){
+                String pressure = CitySpec.getPressure(MainActivity.this,setCity.getSelectedItemPosition() );
+                intent.putExtra(keyPressure,pressure );
             }
+            if (weatherDayChek.isChecked()){
+                String weatherDay = CitySpec.getWeatherDay(MainActivity.this,setCity.getSelectedItemPosition());
+                intent.putExtra(keyWeatherDay,weatherDay);
+            }
+            if (weatherWeekChek.isChecked()){
+                String weatherWeek = CitySpec.getWeatherWeek(MainActivity.this,setCity.getSelectedItemPosition());
+                intent.putExtra(keyWeatherDay,weatherWeek);
+            }
+
+            String text = CitySpec.getCity(MainActivity.this, setCity.getSelectedItemPosition());
+            saveText(setCity.getSelectedItemPosition()); //отправляем на сохранение позицию
+            intent.putExtra(textInputKey, text); // Кладем в Intent строку putExtra(ключ, значение)
+            startActivityForResult(intent, 1);
+
+        }
     }
     //метод ожидает ответ от 2 экрана, он переопределенный
     @Override

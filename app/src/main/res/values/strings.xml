@@ -10,6 +10,7 @@
     <string name="давление">Давление</string>
     <string name="погодаНаЗавтра">Погода на завтра</string>
     <string name="ПогодаНаНеделю">Погода на неделю</string>
+    <string name="двоеточие">: </string>
 
     <!-- Создаём массив городов -->
 
@@ -28,4 +29,69 @@
         <item>+19, Град</item>
         <item>+35, Солнечно</item>
     </string-array>
+
+    <string-array name="pressure">
+        <item>762 мм рт.ст </item>
+        <item>760 мм рт.ст </item>
+        <item>757 мм рт.ст</item>
+        <item>765 мм рт.ст</item>
+        <item>761 мм рт.ст</item>
+    </string-array>
+
+    <string-array name="weatherDay">
+        <item>+27, Ясно </item>
+        <item>+29, Дожди </item>
+        <item>+13, Облачно</item>
+        <item>+25, Солнечно</item>
+        <item>+30, Облачно</item>
+    </string-array>
+
+    <string-array name="weatherWeek">
+        <string-array >
+            <item>+1, Ясно </item>
+            <item>+2, Дожди </item>
+            <item>+3, Облачно</item>
+            <item>+4, Солнечно</item>
+            <item>+5, Град</item>
+            <item>+5, Облачно</item>
+            <item>+5, Пасмурно</item>
+        </string-array>
+        <string-array >
+            <item>+5, Ясно </item>
+            <item>+5, Дожди </item>
+            <item>+5, Облачно</item>
+            <item>+5, Солнечно</item>
+            <item>+5, Град</item>
+            <item>+5, Облачно</item>
+            <item>+5, Пасмурно</item>
+        </string-array>
+        <string-array >
+            <item>+7, Ясно </item>
+            <item>+7, Дожди </item>
+            <item>+7, Облачно</item>
+            <item>+7, Солнечно</item>
+            <item>+7, Град</item>
+            <item>+7, Облачно</item>
+            <item>+7, Пасмурно</item>
+        </string-array>
+        <string-array >
+            <item>+10, Ясно </item>
+            <item>+10, Дожди </item>
+            <item>+10, Облачно</item>
+            <item>+10, Солнечно</item>
+            <item>+10, Град</item>
+            <item>+10, Облачно</item>
+            <item>+10, Пасмурно</item>
+        </string-array>
+        <string-array >
+            <item>+15, Ясно </item>
+            <item>+15, Дожди </item>
+            <item>+15, Облачно</item>
+            <item>+15, Солнечно</item>
+            <item>+15, Град</item>
+            <item>+15, Облачно</item>
+            <item>+15, Пасмурно</item>
+        </string-array>
+    </string-array>
+
 </resources>

@@ -9,6 +9,17 @@ public class CitySpec {
         String [] setWeather = context.getResources().getStringArray(R.array.weather);
         //отправяем погоду относительно позиции спиннера
         return setWeather[position];
-
+    }
+    static String getPressure (Context context, int position){
+        String [] setPressure = context.getResources().getStringArray(R.array.pressure);
+        return setPressure[position];
+    }
+    static String getWeatherDay (Context context, int position){
+        String [] setWeatherDay = context.getResources().getStringArray(R.array.weatherDay);
+        return setWeatherDay[position];
+    }
+    static String getWeatherWeek (Context context, int position){
+        String [] setWeatherWeek = context.getResources().getStringArray(R.array.weatherWeek);
+        return setWeatherWeek[position];
     }
 }
