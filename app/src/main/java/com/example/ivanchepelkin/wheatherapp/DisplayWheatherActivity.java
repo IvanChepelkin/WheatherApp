@@ -108,6 +108,12 @@ public class DisplayWheatherActivity extends AppCompatActivity implements View.O
                 displayWeatherDay.setText(getString(R.string.погодаНаЗавтра) + getString(R.string.двоеточие)  +textWeatherDay);
             }
 
+            textWeatherWeek = intent.getStringExtra(MainActivity.keyWeatherWeek);
+
+            if (textWeatherWeek != null ){
+                displayWeatherWeek.setText(getString(R.string.ПогодаНаНеделю) + getString(R.string.двоеточие)  +textWeatherWeek);
+            }
+
         }
     }
 

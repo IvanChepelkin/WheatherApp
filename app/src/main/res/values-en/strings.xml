@@ -10,6 +10,7 @@
     <string name="давление">Pressure</string>
     <string name="погодаНаЗавтра">Weather for tomorrow</string>
     <string name="ПогодаНаНеделю">Week for a weather</string>
+    <string name="двоеточие">:  </string>
 
     <!-- Создаём массив городов -->
 
@@ -22,10 +23,34 @@
     </string-array>
 
     <string-array name="weather">
-        <item>+25, Partly cloudy </item>
-        <item>+31, Rains </item>
-        <item>+15, Mainly cloudy</item>
-        <item>+19, Grad</item>
-        <item>+35, Sunny</item>
+        <item>+25, Облачно </item>
+        <item>+31, Дожди </item>
+        <item>+15, Пасмурно</item>
+        <item>+19, Град</item>
+        <item>+35, Солнечно</item>
+    </string-array>
+
+    <string-array name="pressure">
+        <item>762 мм рт.ст </item>
+        <item>760 мм рт.ст </item>
+        <item>757 мм рт.ст</item>
+        <item>765 мм рт.ст</item>
+        <item>761 мм рт.ст</item>
+    </string-array>
+
+    <string-array name="weatherDay">
+        <item>+27, Ясно </item>
+        <item>+29, Дожди </item>
+        <item>+13, Облачно</item>
+        <item>+25, Солнечно</item>
+        <item>+30, Облачно</item>
+    </string-array>
+
+    <string-array name="weatherWeek">
+        <item>Всю неделю ясно </item>
+        <item>Всю неделю дожди </item>
+        <item>Всю неделю облачно</item>
+        <item>Всю неделю солнечно</item>
+        <item>Всю неделю облачно</item>
     </string-array>
 </resources>

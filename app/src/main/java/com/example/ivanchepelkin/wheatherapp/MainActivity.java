@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         countText = findViewById(R.id.count);
         pressureChek = findViewById(R.id.pressureCheck);
         weatherDayChek = findViewById(R.id.weatherDayCheck);
-        weatherWeekChek = findViewById(R.id.pressureCheck);
+        weatherWeekChek = findViewById(R.id.weatherWeekCheck);
     }
 
     private void setOnClickListeners(){
@@ -143,9 +143,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
     void loadCheckBoxPosition() {
         shareP = getPreferences(MODE_PRIVATE);
-        Boolean savedCheckBoxPosition = shareP.getBoolean(SAVED_CHECK_BOX1,true);
-        if (!savedCheckBoxPosition) {
-            pressureChek.setChecked(false);
+
+        CheckBox [] arrCheckBox = {pressureChek,weatherDayChek,weatherWeekChek};
+        String [] arrSAVED_CHECk_BOX = {SAVED_CHECK_BOX1,SAVED_CHECK_BOX2,SAVED_CHECK_BOX3};
+
+        for (int i = 0; i < arrSAVED_CHECk_BOX.length ; i++) {
+            Boolean savedCheckBoxPosition = shareP.getBoolean(arrSAVED_CHECk_BOX[i],false);
+            if (!savedCheckBoxPosition.equals(false)){
+                arrCheckBox[i].setChecked(true);
+            }
         }
     }
     @Override
@@ -160,15 +166,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 intent.putExtra(keyPressure,pressure );
                 saveChekBoxPosition(pressureChek.isChecked(),pressureChek);
             }
+            else if (!pressureChek.isChecked()){
+                saveChekBoxPosition(pressureChek.isChecked(),pressureChek);
+            }
+
             if (weatherDayChek.isChecked()){
                 String weatherDay = CitySpec.getWeatherDay(MainActivity.this,setCity.getSelectedItemPosition());
                 intent.putExtra(keyWeatherDay,weatherDay);
-                saveChekBoxPosition(pressureChek.isChecked(),weatherDayChek);
+                saveChekBoxPosition(weatherDayChek.isChecked(),weatherDayChek);
             }
+            else if (!weatherDayChek.isChecked()){
+                saveChekBoxPosition(weatherDayChek.isChecked(),weatherDayChek);
+            }
+
             if (weatherWeekChek.isChecked()){
                 String weatherWeek = CitySpec.getWeatherWeek(MainActivity.this,setCity.getSelectedItemPosition());
                 intent.putExtra(keyWeatherWeek,weatherWeek);
-                saveChekBoxPosition(pressureChek.isChecked(),weatherWeekChek);
+                saveChekBoxPosition(weatherWeekChek.isChecked(),weatherWeekChek);
+            }
+            else if (!weatherWeekChek.isChecked()){
+                saveChekBoxPosition(weatherWeekChek.isChecked(),weatherWeekChek);
             }
 
             String text = CitySpec.getCity(MainActivity.this, setCity.getSelectedItemPosition());
