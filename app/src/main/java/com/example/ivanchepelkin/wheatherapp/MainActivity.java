@@ -4,16 +4,20 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
     private static final String TAG = MainActivity.class.getSimpleName();
 
+    private RecyclerView recyclerCities;
     private Spinner setCity;
     private Button button;
     private SharedPreferences shareP;
@@ -88,6 +92,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     // метод инициаизирует вьюшки через id
     private void initViews() {
+        recyclerCities = findViewById(R.id.recycler_Cities);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext(),LinearLayoutManager.VERTICAL,false);
+        recyclerCities.setLayoutManager(linearLayoutManager);
+        recyclerCities.setAdapter(new ListRecycler());
+
         setCity = findViewById(R.id.spinnerForCities);
         button = findViewById(R.id.button_show_weather);
         countText = findViewById(R.id.count);

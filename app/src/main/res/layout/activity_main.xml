@@ -10,6 +10,8 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+
+
         <TextView
             android:id="@+id/getWeather"
             android:layout_width="match_parent"
@@ -22,6 +24,7 @@
             android:text="@string/offer"
             android:textSize="40sp" />
         <!-- В атрибуте android:entries передайте ссылку на массив -->
+
         <Spinner
             android:id="@+id/spinnerForCities"
             android:layout_width="match_parent"
@@ -34,6 +37,12 @@
             android:layout_marginTop="8dp"
             android:textSize="25sp"
             />
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_Cities"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        </android.support.v7.widget.RecyclerView>
 
         <Button
             android:id="@+id/button_show_weather"
