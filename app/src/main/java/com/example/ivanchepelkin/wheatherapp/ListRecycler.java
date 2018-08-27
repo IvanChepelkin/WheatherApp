@@ -1,7 +1,6 @@
 package com.example.ivanchepelkin.wheatherapp;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -13,9 +12,7 @@ import android.widget.TextView;
 import java.lang.ref.WeakReference;
 
 public class ListRecycler extends RecyclerView.Adapter<ListRecycler.WeatherRecyclerViewHolder> {
-
-    String[] cityStringArr = WeatherApplication.context.getResources().getStringArray(R.array.cityGroup);
-    int length = cityStringArr.length;// количество выводимых строк и количесвто экземпляров Weather[]
+    int length = Weather.getLength();// количество выводимых строк и количесвто экземпляров Weather[]
     private WeakReference<Activity> activity;
     ListRecycler(WeakReference<Activity> activity ){
         this.activity = activity;
@@ -67,6 +64,6 @@ public class ListRecycler extends RecyclerView.Adapter<ListRecycler.WeatherRecyc
             // вешаем слушать на itemView, который пришел на вход
         }
 
-
     }
+
 }

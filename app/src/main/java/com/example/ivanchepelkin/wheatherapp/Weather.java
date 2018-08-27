@@ -6,7 +6,11 @@ public class Weather {
     private String pressure;
     private String weatherDay;
     private String wetherWeek;
-
+    private static String[] cityStringArr = WeatherApplication.context.getResources().getStringArray(R.array.cityGroup);
+    private static String[] weatherStringArr = WeatherApplication.context.getResources().getStringArray(R.array.weather);
+    private static String[] preassureStringArr = WeatherApplication.context.getResources().getStringArray(R.array.pressure);
+    private static String[] weatherDayStringArr = WeatherApplication.context.getResources().getStringArray(R.array.weatherDay);
+    private static String[] weatherWeekStringArr = WeatherApplication.context.getResources().getStringArray(R.array.weatherWeek);
 
     public Weather(String city, String weatherCity, String pressure, String weatherDay, String wetherWeek) {
         this.city = city;
@@ -17,11 +21,7 @@ public class Weather {
     }
 
     public static Weather[] setWeathers(Weather weathersForCitiesArr[]) {
-        String[] cityStringArr = WeatherApplication.context.getResources().getStringArray(R.array.cityGroup);
-        String[] weatherStringArr = WeatherApplication.context.getResources().getStringArray(R.array.weather);
-        String[] preassureStringArr = WeatherApplication.context.getResources().getStringArray(R.array.pressure);
-        String[] weatherDayStringArr = WeatherApplication.context.getResources().getStringArray(R.array.weatherDay);
-        String[] weatherWeekStringArr = WeatherApplication.context.getResources().getStringArray(R.array.weatherWeek);
+
 
         for (int i = 0; i < cityStringArr.length; i++) {
             weathersForCitiesArr[i] = new Weather(cityStringArr[i], weatherStringArr[i], preassureStringArr[i], weatherDayStringArr[i], weatherWeekStringArr[i]);
@@ -47,6 +47,9 @@ public class Weather {
 
     public String getWetherWeek() {
         return wetherWeek;
+    }
+    public static int getLength() {
+        return cityStringArr.length;
     }
 
 }

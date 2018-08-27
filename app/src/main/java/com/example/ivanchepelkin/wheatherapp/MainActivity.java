@@ -48,7 +48,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         initViews();
         setOnClickListeners();
         loadCheckBoxPosition();
+        chekBundle(savedInstanceState); //метод проверки bundle
     }
+    // Метод сохранения данных при пересоздании Activity
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(KEY_inputCount,inputCount); //сохраняю по ключу переменнуюю count
+    }
+    // метод вывода данных после сохранения при пересоздании Activity
+    private void chekBundle(Bundle savedInstanceState){
+        if (savedInstanceState != null){
+            inputCount = savedInstanceState.getString(KEY_inputCount); //извлекаем данные счетчика
+            countText.setText(inputCount);
+        }
+    }
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -124,43 +139,37 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
 
-//        Intent intent = new Intent(MainActivity.this, DisplayWheatherActivity.class);
-//
-//
-//
-//            if (pressureChek.isChecked()){
-//
-//                intent.putExtra(keyPressure,pressure );
-//                saveChekBoxPosition(pressureChek.isChecked(),pressureChek);
-//            }
-//            else if (!pressureChek.isChecked()){
-//                saveChekBoxPosition(pressureChek.isChecked(),pressureChek);
-//            }
-//
-//            if (weatherDayChek.isChecked()){
-//
-//                intent.putExtra(keyWeatherDay,weatherDay);
-//                saveChekBoxPosition(weatherDayChek.isChecked(),weatherDayChek);
-//            }
-//            else if (!weatherDayChek.isChecked()){
-//                saveChekBoxPosition(weatherDayChek.isChecked(),weatherDayChek);
-//            }
-//
-//            if (weatherWeekChek.isChecked()){
-//
-//                intent.putExtra(keyWeatherWeek,weatherWeek);
-//                saveChekBoxPosition(weatherWeekChek.isChecked(),weatherWeekChek);
-//            }
-//            else if (!weatherWeekChek.isChecked()){
-//                saveChekBoxPosition(weatherWeekChek.isChecked(),weatherWeekChek);
-//            }
-//
-//
-//
-//            intent.putExtra(textInputKey, text); // Кладем в Intent строку putExtra(ключ, значение)
-//            startActivityForResult(intent, 1);
-//
-//        }
+        Intent intent = new Intent(MainActivity.this, DisplayWheatherActivity.class);
+
+            if (pressureChek.isChecked()){
+                saveChekBoxPosition(pressureChek.isChecked(),pressureChek);
+                intent.putExtra(keyPressure,pressureChek.isChecked());
+            }
+            else if (!pressureChek.isChecked()){
+                saveChekBoxPosition(pressureChek.isChecked(),pressureChek);
+                intent.putExtra(keyPressure,!pressureChek.isChecked());
+            }
+
+            if (weatherDayChek.isChecked()){
+                saveChekBoxPosition(weatherDayChek.isChecked(),weatherDayChek);
+                intent.putExtra(keyWeatherDay,weatherDayChek.isChecked());
+            }
+            else if (!weatherDayChek.isChecked()){
+                saveChekBoxPosition(weatherDayChek.isChecked(),weatherDayChek);
+                intent.putExtra(keyWeatherDay,!weatherDayChek.isChecked());
+            }
+
+            if (weatherWeekChek.isChecked()){
+                saveChekBoxPosition(weatherWeekChek.isChecked(),weatherWeekChek);
+                intent.putExtra(keyWeatherWeek,weatherWeekChek.isChecked());
+            }
+            else if (!weatherWeekChek.isChecked()){
+                saveChekBoxPosition(weatherWeekChek.isChecked(),weatherWeekChek);
+                intent.putExtra(keyWeatherWeek,!weatherWeekChek.isChecked());
+            }
+
+            startActivityForResult(intent, 1);
+
     }
     //метод ожидает ответ от 2 экрана, он переопределенный
     @Override

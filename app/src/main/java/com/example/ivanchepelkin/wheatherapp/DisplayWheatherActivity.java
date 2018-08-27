@@ -12,8 +12,8 @@ import android.widget.Toast;
 
 public class DisplayWheatherActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = MainActivity.class.getSimpleName();
-    String[] cityStringArr = WeatherApplication.context.getResources().getStringArray(R.array.cityGroup);
-    int length = cityStringArr.length;// количество выводимых строк и количесвто экземпляров Weather[]
+
+    int length = Weather.getLength();// количество выводимых строк и количесвто экземпляров Weather[]
     TextView textView;
     TextView displayPressure;
     TextView displayWeatherDay;
@@ -81,7 +81,6 @@ public class DisplayWheatherActivity extends AppCompatActivity implements View.O
         finish();//закрываем активность
     }
 
-
     private void initViews() {
         textView = findViewById(R.id.dispayWheather);
         button = findViewById(R.id.button_send_Message);
@@ -106,22 +105,21 @@ public class DisplayWheatherActivity extends AppCompatActivity implements View.O
 
             textView.setText(category);
 
-            textPressure = intent.getStringExtra(MainActivity.keyPressure);
+            boolean a = intent.getBooleanExtra(MainActivity.keyPressure,false);
+            boolean b = intent.getBooleanExtra(MainActivity.keyWeatherDay,false);
+            boolean c = intent.getBooleanExtra(MainActivity.keyWeatherDay,false);
 
-            if (textPressure !=null ) {
-                displayPressure.setText(getString(R.string.давление) + getString(R.string.двоеточие) + textPressure);
+            if (a !=false ) {
+                displayPressure.setText(getString(R.string.давление) + getString(R.string.двоеточие) + weathersForCitiesArr[position].getPressure());
             }
 
-            textWeatherDay = intent.getStringExtra(MainActivity.keyWeatherDay);
-
-            if (textWeatherDay != null ){
-                displayWeatherDay.setText(getString(R.string.погодаНаЗавтра) + getString(R.string.двоеточие)  +textWeatherDay);
+            if (b !=false){
+                displayWeatherDay.setText(getString(R.string.погодаНаЗавтра) + getString(R.string.двоеточие)  +weathersForCitiesArr[position].getWeatherDay());
             }
 
-            textWeatherWeek = intent.getStringExtra(MainActivity.keyWeatherWeek);
 
-            if (textWeatherWeek != null ){
-                displayWeatherWeek.setText(getString(R.string.ПогодаНаНеделю) + getString(R.string.двоеточие)  +textWeatherWeek);
+            if (c !=false){
+                displayWeatherWeek.setText(getString(R.string.ПогодаНаНеделю) + getString(R.string.двоеточие)  +weathersForCitiesArr[position].getWetherWeek());
             }
 
         }
