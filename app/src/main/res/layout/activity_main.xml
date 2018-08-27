@@ -25,18 +25,7 @@
             android:textSize="40sp" />
         <!-- В атрибуте android:entries передайте ссылку на массив -->
 
-        <Spinner
-            android:id="@+id/spinnerForCities"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:entries="@array/cityGroup"
-            android:layout_marginEnd="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:textSize="25sp"
-            />
+
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler_Cities"
             android:layout_width="match_parent"
@@ -44,17 +33,7 @@
 
         </android.support.v7.widget.RecyclerView>
 
-        <Button
-            android:id="@+id/button_show_weather"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginEnd="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:text="@string/textForButton" />
+
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

@@ -14,12 +14,12 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import java.lang.ref.WeakReference;
+
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
     private static final String TAG = MainActivity.class.getSimpleName();
 
     private RecyclerView recyclerCities;
-    private Spinner setCity;
-    private Button button;
     private SharedPreferences shareP;
     private CheckBox pressureChek;
     private CheckBox weatherDayChek;
@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     final String SAVED_CHECK_BOX2 = "saved_chek_box2";
     final String SAVED_CHECK_BOX3 = "saved_chek_box3";
 
-    static final String textInputKey = "textInputKey";
+
     static final String keyPressure = "keyPressure";
     static final String keyWeatherDay = "keyWeatherDay";
     static final String keyWeatherWeek = "WeatherWeek";
@@ -47,47 +47,32 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         initViews();
         setOnClickListeners();
-        chekBundle(savedInstanceState); //метод проверки bundle
-        loadText();  //загружаем последний выбор спинера
         loadCheckBoxPosition();
     }
-
     @Override
     protected void onStart() {
         super.onStart();
         Log.i(TAG, "запуск onStart MainActivity");
     }
-
     @Override
     protected void onResume() {
         super.onResume();
         Log.i(TAG, "запуск onResume MainActivity");
     }
-
     @Override
     protected void onPause() {
         super.onPause();
         Log.i(TAG, "запуск onPause MainActivity");
     }
-
     @Override
     protected void onStop() {
         super.onStop();
         Log.i(TAG, "запуск onStop MainActivity");
     }
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
         Log.i(TAG, "запуск onDestroy MainActivity");
-    }
-
-    // Метод сохранения данных при пересоздании Activity
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putString(KEY_inputCount,inputCount); //сохраняю по ключу переменнуюю count
-        outState.putInt(KEY_POSITION_setCity,setCity.getSelectedItemPosition()); //сохраняю по ключу позицию спинера
     }
 
     // метод инициаизирует вьюшки через id
@@ -95,10 +80,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         recyclerCities = findViewById(R.id.recycler_Cities);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext(),LinearLayoutManager.VERTICAL,false);
         recyclerCities.setLayoutManager(linearLayoutManager);
-        recyclerCities.setAdapter(new ListRecycler());
+        recyclerCities.setAdapter(new ListRecycler(new WeakReference(this)));
 
-        setCity = findViewById(R.id.spinnerForCities);
-        button = findViewById(R.id.button_show_weather);
         countText = findViewById(R.id.count);
         pressureChek = findViewById(R.id.pressureCheck);
         weatherDayChek = findViewById(R.id.weatherDayCheck);
@@ -106,27 +89,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void setOnClickListeners(){
-        button.setOnClickListener(MainActivity.this);
         pressureChek.setOnClickListener(MainActivity.this);
         weatherWeekChek.setOnClickListener(MainActivity.this);
         weatherDayChek.setOnClickListener(MainActivity.this);
     }
- // метод вывода данных после сохранения при пересоздании Activity
-    private void chekBundle(Bundle savedInstanceState){
-        if (savedInstanceState != null){
-            inputCount = savedInstanceState.getString(KEY_inputCount); //извлекаем данные счетчика
-            countText.setText(inputCount);
-            setCity.setSelection(savedInstanceState.getInt(KEY_POSITION_setCity)); // извлекаю данные позицию спинера
-        }
-    }
-    // сохранение данных
-    void saveText(int position) {
-        String pos = String.valueOf(position);
-        shareP = getPreferences(MODE_PRIVATE);//Константа MODE_PRIVATE используется для настройки доступа
-        SharedPreferences.Editor ed = shareP.edit(); //чтобы редактировать данные, необходим объект Editor
-        ed.putString(SAVED_TEXT, pos);
-        ed.apply();
-    }
+
     void saveChekBoxPosition(boolean position, CheckBox checkBox){
         shareP = getPreferences(MODE_PRIVATE);//Константа MODE_PRIVATE используется для настройки доступа
         SharedPreferences.Editor ed = shareP.edit(); //чтобы редактировать данные, необходим объект Editor
@@ -140,16 +107,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         ed.apply();
     }
-    //вывод сохраненных данных
-    void loadText() {
-        shareP = getPreferences(MODE_PRIVATE);
-        int pos;
-        String savedPos = shareP.getString(SAVED_TEXT, "");
-        if (!savedPos.equals("")) {
-            pos = Integer.parseInt(savedPos);
-            setCity.setSelection(pos);
-        }
-    }
+
     void loadCheckBoxPosition() {
         shareP = getPreferences(MODE_PRIVATE);
 
@@ -166,43 +124,43 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
 
-        Intent intent = new Intent(MainActivity.this, DisplayWheatherActivity.class);
-
-        if (v.getId() == R.id.button_show_weather) {
-
-            if (pressureChek.isChecked()){
-                String pressure = CitySpec.getPressure(MainActivity.this,setCity.getSelectedItemPosition() );
-                intent.putExtra(keyPressure,pressure );
-                saveChekBoxPosition(pressureChek.isChecked(),pressureChek);
-            }
-            else if (!pressureChek.isChecked()){
-                saveChekBoxPosition(pressureChek.isChecked(),pressureChek);
-            }
-
-            if (weatherDayChek.isChecked()){
-                String weatherDay = CitySpec.getWeatherDay(MainActivity.this,setCity.getSelectedItemPosition());
-                intent.putExtra(keyWeatherDay,weatherDay);
-                saveChekBoxPosition(weatherDayChek.isChecked(),weatherDayChek);
-            }
-            else if (!weatherDayChek.isChecked()){
-                saveChekBoxPosition(weatherDayChek.isChecked(),weatherDayChek);
-            }
-
-            if (weatherWeekChek.isChecked()){
-                String weatherWeek = CitySpec.getWeatherWeek(MainActivity.this,setCity.getSelectedItemPosition());
-                intent.putExtra(keyWeatherWeek,weatherWeek);
-                saveChekBoxPosition(weatherWeekChek.isChecked(),weatherWeekChek);
-            }
-            else if (!weatherWeekChek.isChecked()){
-                saveChekBoxPosition(weatherWeekChek.isChecked(),weatherWeekChek);
-            }
-
-            String text = CitySpec.getCity(MainActivity.this, setCity.getSelectedItemPosition());
-            saveText(setCity.getSelectedItemPosition()); //отправляем на сохранение позицию
-            intent.putExtra(textInputKey, text); // Кладем в Intent строку putExtra(ключ, значение)
-            startActivityForResult(intent, 1);
-
-        }
+//        Intent intent = new Intent(MainActivity.this, DisplayWheatherActivity.class);
+//
+//
+//
+//            if (pressureChek.isChecked()){
+//
+//                intent.putExtra(keyPressure,pressure );
+//                saveChekBoxPosition(pressureChek.isChecked(),pressureChek);
+//            }
+//            else if (!pressureChek.isChecked()){
+//                saveChekBoxPosition(pressureChek.isChecked(),pressureChek);
+//            }
+//
+//            if (weatherDayChek.isChecked()){
+//
+//                intent.putExtra(keyWeatherDay,weatherDay);
+//                saveChekBoxPosition(weatherDayChek.isChecked(),weatherDayChek);
+//            }
+//            else if (!weatherDayChek.isChecked()){
+//                saveChekBoxPosition(weatherDayChek.isChecked(),weatherDayChek);
+//            }
+//
+//            if (weatherWeekChek.isChecked()){
+//
+//                intent.putExtra(keyWeatherWeek,weatherWeek);
+//                saveChekBoxPosition(weatherWeekChek.isChecked(),weatherWeekChek);
+//            }
+//            else if (!weatherWeekChek.isChecked()){
+//                saveChekBoxPosition(weatherWeekChek.isChecked(),weatherWeekChek);
+//            }
+//
+//
+//
+//            intent.putExtra(textInputKey, text); // Кладем в Intent строку putExtra(ключ, значение)
+//            startActivityForResult(intent, 1);
+//
+//        }
     }
     //метод ожидает ответ от 2 экрана, он переопределенный
     @Override

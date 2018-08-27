@@ -12,6 +12,8 @@ import android.widget.Toast;
 
 public class DisplayWheatherActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = MainActivity.class.getSimpleName();
+    String[] cityStringArr = WeatherApplication.context.getResources().getStringArray(R.array.cityGroup);
+    int length = cityStringArr.length;// количество выводимых строк и количесвто экземпляров Weather[]
     TextView textView;
     TextView displayPressure;
     TextView displayWeatherDay;
@@ -19,11 +21,14 @@ public class DisplayWheatherActivity extends AppCompatActivity implements View.O
 
     Button button;
 
+    int position;
+
     String textWheather;
     String textPressure;
     String textWeatherDay;
     String textWeatherWeek;
-    static final String keySendResult = "keySendResult";
+    static final String keySendResultPerson = "keySendResult";
+    static final String textInputKey = "textInputKey";
     static int cnt = 0;
 
 
@@ -43,7 +48,7 @@ public class DisplayWheatherActivity extends AppCompatActivity implements View.O
     }
 
     @Override
-    protected void onResume() {
+     protected void onResume() {
         super.onResume();
         Log.i(TAG, "запуск onResume DisplayWheatherActivity");
     }
@@ -93,8 +98,13 @@ public class DisplayWheatherActivity extends AppCompatActivity implements View.O
     private void displayText() {
         Intent intent = getIntent();
         if (intent != null) {
-            textWheather = intent.getStringExtra(MainActivity.textInputKey); // находим по ключу наш текст
-            textView.setText(textWheather);
+            Weather[] weathersForCitiesArr = new Weather[length];
+            weathersForCitiesArr = Weather.setWeathers(weathersForCitiesArr);
+
+            position = intent.getIntExtra(textInputKey,1); // находим по ключу наш текст
+            String category = weathersForCitiesArr[position].getWeatherCity();
+
+            textView.setText(category);
 
             textPressure = intent.getStringExtra(MainActivity.keyPressure);
 
@@ -124,7 +134,7 @@ public class DisplayWheatherActivity extends AppCompatActivity implements View.O
             Intent intent = new Intent(Intent.ACTION_SEND);
             String sendResult = textView.getText().toString();
             intent.setType("text/plain");//задаем тип передаваемых данных
-            intent.putExtra(keySendResult, sendResult);
+            intent.putExtra(keySendResultPerson, sendResult);
             String chooserTitle = getString(R.string.chooser_title);
             Intent chosenIntent = Intent.createChooser(intent, chooserTitle);
             try {
