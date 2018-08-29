@@ -12,7 +12,7 @@ public class Weather {
     private static String[] weatherDayStringArr = WeatherApplication.context.getResources().getStringArray(R.array.weatherDay);
     private static String[] weatherWeekStringArr = WeatherApplication.context.getResources().getStringArray(R.array.weatherWeek);
 
-    public Weather(String city, String weatherCity, String pressure, String weatherDay, String wetherWeek) {
+    private Weather(String city, String weatherCity, String pressure, String weatherDay, String wetherWeek) {
         this.city = city;
         this.weatherCity = weatherCity;
         this.pressure = pressure;

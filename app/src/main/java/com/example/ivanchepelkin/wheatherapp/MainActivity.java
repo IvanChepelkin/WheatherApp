@@ -21,21 +21,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private RecyclerView recyclerCities;
     private SharedPreferences shareP;
-    public CheckBox pressureChek;
+    private CheckBox pressureChek;
     private CheckBox weatherDayChek;
     private CheckBox weatherWeekChek;
     private TextView countText;
-    final String SAVED_TEXT = "saved_text";
     final String SAVED_CHECK_BOX1 = "saved_chek_box1";
     final String SAVED_CHECK_BOX2 = "saved_chek_box2";
     final String SAVED_CHECK_BOX3 = "saved_chek_box3";
 
-
-    static final String keyPressure = "keyPressure";
-    static final String keyWeatherDay = "keyWeatherDay";
-    static final String keyWeatherWeek = "WeatherWeek";
-
-    private static final String KEY_POSITION_setCity = "KEY_POSITION_setCity";
+    static final int cnt_requestCode = 1;
 
     private static final String KEY_inputCount = "KEY_inputCount";
     private String inputCount = "";
@@ -128,7 +122,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         CheckBox [] arrCheckBox = {pressureChek,weatherDayChek,weatherWeekChek};
         String [] arrSAVED_CHECk_BOX = {SAVED_CHECK_BOX1,SAVED_CHECK_BOX2,SAVED_CHECK_BOX3};
-
         for (int i = 0; i < arrSAVED_CHECk_BOX.length ; i++) {
             Boolean savedCheckBoxPosition = shareP.getBoolean(arrSAVED_CHECk_BOX[i],false);
             if (!savedCheckBoxPosition.equals(false)){
@@ -165,14 +158,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 WeatherController.getInstance().setWeatherWeekStatus(weatherWeekChek.isChecked());
                 saveChekBoxPosition(weatherWeekChek.isChecked(),weatherWeekChek);
             }
+            //startActivityForResult(intent, 1);
     }
 
     //метод ожидает ответ от 2 экрана, он переопределенный
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data){
-        if (resultCode == RESULT_OK){
-            inputCount = data.getStringExtra("name");
-            countText.setText(inputCount);
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == cnt_requestCode) {
+            if (resultCode == RESULT_OK) {
+                inputCount = data.getStringExtra("name");
+                countText.setText(inputCount);
+            }
         }
     }
 }

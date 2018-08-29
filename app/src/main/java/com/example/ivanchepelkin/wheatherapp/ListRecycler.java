@@ -51,7 +51,9 @@ public class ListRecycler extends RecyclerView.Adapter<ListRecycler.WeatherRecyc
         if (activity.get() !=null){
             Intent intent = new Intent(activity.get(),DisplayWheatherActivity.class);
             intent.putExtra(DisplayWheatherActivity.textInputKey,position);
-            activity.get().startActivity(intent);
+            //открываем DisplayWeatherActivity , отпраяляя intent и cnt_requestCode,
+            // по cnt_requestCode выводим значение счетчика на MainActivity
+            activity.get().startActivityForResult(intent,MainActivity.cnt_requestCode);
         }
     }
 
@@ -63,7 +65,5 @@ public class ListRecycler extends RecyclerView.Adapter<ListRecycler.WeatherRecyc
             categoryNameTextView = itemView.findViewById(R.id.category_name_text_view);
             // вешаем слушать на itemView, который пришел на вход
         }
-
     }
-
 }

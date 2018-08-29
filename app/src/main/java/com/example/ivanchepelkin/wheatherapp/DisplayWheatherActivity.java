@@ -20,13 +20,8 @@ public class DisplayWheatherActivity extends AppCompatActivity implements View.O
     TextView displayWeatherWeek;
 
     Button button;
-
     int position;
 
-    String textWheather;
-    String textPressure;
-    String textWeatherDay;
-    String textWeatherWeek;
     static final String keySendResultPerson = "keySendResult";
     static final String textInputKey = "textInputKey";
     static int cnt = 0;
@@ -52,19 +47,16 @@ public class DisplayWheatherActivity extends AppCompatActivity implements View.O
         super.onResume();
         Log.i(TAG, "запуск onResume DisplayWheatherActivity");
     }
-
     @Override
     protected void onPause() {
         super.onPause();
         Log.i(TAG, "запуск onPause DisplayWheatherActivity");
     }
-
     @Override
     protected void onStop() {
         super.onStop();
         Log.i(TAG, "запуск onStop DisplayWheatherActivity");
     }
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -109,21 +101,17 @@ public class DisplayWheatherActivity extends AppCompatActivity implements View.O
             boolean b = WeatherController.getInstance().isWeatherDayStatus();
             boolean c = WeatherController.getInstance().isWeatherWeekStatus();
 
-            if (a !=false ) {
+            if (a) {
                 displayPressure.setText(getString(R.string.давление) + getString(R.string.двоеточие) + weathersForCitiesArr[position].getPressure());
             }
-
-            if (b !=false){
+            if (b) {
                 displayWeatherDay.setText(getString(R.string.погодаНаЗавтра) + getString(R.string.двоеточие)  +weathersForCitiesArr[position].getWeatherDay());
             }
-
-
-            if (c !=false){
+            if (c) {
                 displayWeatherWeek.setText(getString(R.string.ПогодаНаНеделю) + getString(R.string.двоеточие)  +weathersForCitiesArr[position].getWetherWeek());
             }
         }
     }
-
     @Override
     public void onClick(View v) {
 
