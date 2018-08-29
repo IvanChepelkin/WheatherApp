@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private RecyclerView recyclerCities;
     private SharedPreferences shareP;
-    private CheckBox pressureChek;
+    public CheckBox pressureChek;
     private CheckBox weatherDayChek;
     private CheckBox weatherWeekChek;
     private TextView countText;
@@ -139,38 +139,34 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
 
-        Intent intent = new Intent(MainActivity.this, DisplayWheatherActivity.class);
-
             if (pressureChek.isChecked()){
+                WeatherController.getInstance().setPressureStatus(pressureChek.isChecked());
                 saveChekBoxPosition(pressureChek.isChecked(),pressureChek);
-                intent.putExtra(keyPressure,pressureChek.isChecked());
             }
             else if (!pressureChek.isChecked()){
+                WeatherController.getInstance().setPressureStatus(pressureChek.isChecked());
                 saveChekBoxPosition(pressureChek.isChecked(),pressureChek);
-                intent.putExtra(keyPressure,!pressureChek.isChecked());
             }
 
             if (weatherDayChek.isChecked()){
+                WeatherController.getInstance().setWeatherDayStatus(weatherDayChek.isChecked());
                 saveChekBoxPosition(weatherDayChek.isChecked(),weatherDayChek);
-                intent.putExtra(keyWeatherDay,weatherDayChek.isChecked());
             }
             else if (!weatherDayChek.isChecked()){
+                WeatherController.getInstance().setWeatherDayStatus(weatherDayChek.isChecked());
                 saveChekBoxPosition(weatherDayChek.isChecked(),weatherDayChek);
-                intent.putExtra(keyWeatherDay,!weatherDayChek.isChecked());
             }
 
             if (weatherWeekChek.isChecked()){
+                WeatherController.getInstance().setWeatherWeekStatus(weatherWeekChek.isChecked());
                 saveChekBoxPosition(weatherWeekChek.isChecked(),weatherWeekChek);
-                intent.putExtra(keyWeatherWeek,weatherWeekChek.isChecked());
             }
             else if (!weatherWeekChek.isChecked()){
+                WeatherController.getInstance().setWeatherWeekStatus(weatherWeekChek.isChecked());
                 saveChekBoxPosition(weatherWeekChek.isChecked(),weatherWeekChek);
-                intent.putExtra(keyWeatherWeek,!weatherWeekChek.isChecked());
             }
-
-            startActivityForResult(intent, 1);
-
     }
+
     //метод ожидает ответ от 2 экрана, он переопределенный
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data){

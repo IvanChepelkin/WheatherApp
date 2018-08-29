@@ -9,7 +9,7 @@
     <string name="count_value">Number of jumps to the main screen:</string>
     <string name="давление">Pressure</string>
     <string name="погодаНаЗавтра">Weather for tomorrow</string>
-    <string name="ПогодаНаНеделю">Week for a weather</string>
+    <string name="ПогодаНаНеделю">Weather for a Week </string>
     <string name="двоеточие">:  </string>
 
     <!-- Создаём массив городов -->

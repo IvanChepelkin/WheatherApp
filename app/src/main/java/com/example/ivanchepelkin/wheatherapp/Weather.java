@@ -48,6 +48,7 @@ public class Weather {
     public String getWetherWeek() {
         return wetherWeek;
     }
+
     public static int getLength() {
         return cityStringArr.length;
     }

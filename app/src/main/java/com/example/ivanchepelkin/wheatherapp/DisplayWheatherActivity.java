@@ -105,9 +105,9 @@ public class DisplayWheatherActivity extends AppCompatActivity implements View.O
 
             textView.setText(category);
 
-            boolean a = intent.getBooleanExtra(MainActivity.keyPressure,false);
-            boolean b = intent.getBooleanExtra(MainActivity.keyWeatherDay,false);
-            boolean c = intent.getBooleanExtra(MainActivity.keyWeatherDay,false);
+            boolean a = WeatherController.getInstance().isPressureStatus();
+            boolean b = WeatherController.getInstance().isWeatherDayStatus();
+            boolean c = WeatherController.getInstance().isWeatherWeekStatus();
 
             if (a !=false ) {
                 displayPressure.setText(getString(R.string.давление) + getString(R.string.двоеточие) + weathersForCitiesArr[position].getPressure());
@@ -121,7 +121,6 @@ public class DisplayWheatherActivity extends AppCompatActivity implements View.O
             if (c !=false){
                 displayWeatherWeek.setText(getString(R.string.ПогодаНаНеделю) + getString(R.string.двоеточие)  +weathersForCitiesArr[position].getWetherWeek());
             }
-
         }
     }
 
