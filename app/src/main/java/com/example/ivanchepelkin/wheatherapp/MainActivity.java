@@ -8,10 +8,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.LinearLayout;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import java.lang.ref.WeakReference;
@@ -89,7 +86,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         recyclerCities = findViewById(R.id.recycler_Cities);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext(),LinearLayoutManager.VERTICAL,false);
         recyclerCities.setLayoutManager(linearLayoutManager);
-        recyclerCities.setAdapter(new ListRecycler(new WeakReference(this)));
+        recyclerCities.setAdapter(new ListRecyclerAdapter(new WeakReference(this)));
 
         countText = findViewById(R.id.count);
         pressureChek = findViewById(R.id.pressureCheck);
@@ -123,9 +120,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         CheckBox [] arrCheckBox = {pressureChek,weatherDayChek,weatherWeekChek};
         String [] arrSAVED_CHECk_BOX = {SAVED_CHECK_BOX1,SAVED_CHECK_BOX2,SAVED_CHECK_BOX3};
         for (int i = 0; i < arrSAVED_CHECk_BOX.length ; i++) {
-            Boolean savedCheckBoxPosition = shareP.getBoolean(arrSAVED_CHECk_BOX[i],false);
-            if (!savedCheckBoxPosition.equals(false)){
+            Boolean savedCheckBoxPosition = shareP.getBoolean(arrSAVED_CHECk_BOX[i], false);
+            if (!savedCheckBoxPosition.equals(false) && arrCheckBox[i].equals(pressureChek)) {
                 arrCheckBox[i].setChecked(true);
+                WeatherController.getInstance().setPressureStatus(true);
+            } else if (!savedCheckBoxPosition.equals(false) && arrCheckBox[i].equals(weatherDayChek)) {
+                arrCheckBox[i].setChecked(true);
+                WeatherController.getInstance().setWeatherDayStatus(true);
+            } else if (!savedCheckBoxPosition.equals(false) && arrCheckBox[i].equals(weatherWeekChek)) {
+                arrCheckBox[i].setChecked(true);
+                WeatherController.getInstance().setWeatherWeekStatus(true);
             }
         }
     }

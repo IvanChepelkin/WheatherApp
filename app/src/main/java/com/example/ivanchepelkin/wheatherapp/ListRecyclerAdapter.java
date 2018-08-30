@@ -11,10 +11,10 @@ import android.widget.TextView;
 
 import java.lang.ref.WeakReference;
 
-public class ListRecycler extends RecyclerView.Adapter<ListRecycler.WeatherRecyclerViewHolder> {
+public class ListRecyclerAdapter extends RecyclerView.Adapter<ListRecyclerAdapter.WeatherRecyclerViewHolder> {
     int length = Weather.getLength();// количество выводимых строк и количесвто экземпляров Weather[]
     private WeakReference<Activity> activity;
-    ListRecycler(WeakReference<Activity> activity ){
+    ListRecyclerAdapter(WeakReference<Activity> activity ){
         this.activity = activity;
     }
     @NonNull
