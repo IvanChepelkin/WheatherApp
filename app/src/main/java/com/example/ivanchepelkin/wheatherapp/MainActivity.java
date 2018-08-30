@@ -120,6 +120,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         CheckBox [] arrCheckBox = {pressureChek,weatherDayChek,weatherWeekChek};
         String [] arrSAVED_CHECk_BOX = {SAVED_CHECK_BOX1,SAVED_CHECK_BOX2,SAVED_CHECK_BOX3};
         for (int i = 0; i < arrSAVED_CHECk_BOX.length ; i++) {
+
             Boolean savedCheckBoxPosition = shareP.getBoolean(arrSAVED_CHECk_BOX[i], false);
             if (!savedCheckBoxPosition.equals(false) && arrCheckBox[i].equals(pressureChek)) {
                 arrCheckBox[i].setChecked(true);
