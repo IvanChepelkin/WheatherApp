@@ -1,5 +1,6 @@
 package com.example.ivanchepelkin.wheatherapp;
 
+import android.support.v4.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
@@ -22,9 +23,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private CheckBox weatherDayChek;
     private CheckBox weatherWeekChek;
     private TextView countText;
+    private int position;
     final String SAVED_CHECK_BOX1 = "saved_chek_box1";
     final String SAVED_CHECK_BOX2 = "saved_chek_box2";
     final String SAVED_CHECK_BOX3 = "saved_chek_box3";
+
 
     static final int cnt_requestCode = 1;
 
@@ -37,6 +40,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initViews();
+        initDetaiFragment();
         setOnClickListeners();
         loadCheckBoxPosition();
         chekBundle(savedInstanceState); //метод проверки bundle
@@ -47,39 +51,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onSaveInstanceState(outState);
         outState.putString(KEY_inputCount,inputCount); //сохраняю по ключу переменнуюю count
     }
-    // метод вывода данных после сохранения при пересоздании Activity
-    private void chekBundle(Bundle savedInstanceState){
-        if (savedInstanceState != null){
-            inputCount = savedInstanceState.getString(KEY_inputCount); //извлекаем данные счетчика
-            countText.setText(inputCount);
-        }
-    }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        Log.i(TAG, "запуск onStart MainActivity");
-    }
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Log.i(TAG, "запуск onResume MainActivity");
-    }
-    @Override
-    protected void onPause() {
-        super.onPause();
-        Log.i(TAG, "запуск onPause MainActivity");
-    }
-    @Override
-    protected void onStop() {
-        super.onStop();
-        Log.i(TAG, "запуск onStop MainActivity");
-    }
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Log.i(TAG, "запуск onDestroy MainActivity");
-    }
 
     // метод инициаизирует вьюшки через id
     private void initViews() {
@@ -92,6 +64,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         pressureChek = findViewById(R.id.pressureCheck);
         weatherDayChek = findViewById(R.id.weatherDayCheck);
         weatherWeekChek = findViewById(R.id.weatherWeekCheck);
+    }
+    // метод инициализирует фрагмент
+    private void initDetaiFragment(){
+        // создаём фрагмент
+        DisplayWeatherFragment displayWeatherFragment = new DisplayWeatherFragment();
+        // передаем во фрагмент position, номер города изи массива городов weathersForCitiesArr
+        displayWeatherFragment.setWeatherDispay(position);
+        // Начинаем транзакцию фрагмента через SupportFragmentManager
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        // указываем, в какой контейнер хотим поместить наш фрагмент
+        transaction.add(R.id.fragmentContainer,displayWeatherFragment);
+        transaction.commit();
     }
 
     private void setOnClickListeners(){
@@ -114,26 +98,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         ed.apply();
     }
 
-    void loadCheckBoxPosition() {
-        shareP = getPreferences(MODE_PRIVATE);
-
-        CheckBox [] arrCheckBox = {pressureChek,weatherDayChek,weatherWeekChek};
-        String [] arrSAVED_CHECk_BOX = {SAVED_CHECK_BOX1,SAVED_CHECK_BOX2,SAVED_CHECK_BOX3};
-        for (int i = 0; i < arrSAVED_CHECk_BOX.length ; i++) {
-
-            Boolean savedCheckBoxPosition = shareP.getBoolean(arrSAVED_CHECk_BOX[i], false);
-            if (!savedCheckBoxPosition.equals(false) && arrCheckBox[i].equals(pressureChek)) {
-                arrCheckBox[i].setChecked(true);
-                WeatherController.getInstance().setPressureStatus(true);
-            } else if (!savedCheckBoxPosition.equals(false) && arrCheckBox[i].equals(weatherDayChek)) {
-                arrCheckBox[i].setChecked(true);
-                WeatherController.getInstance().setWeatherDayStatus(true);
-            } else if (!savedCheckBoxPosition.equals(false) && arrCheckBox[i].equals(weatherWeekChek)) {
-                arrCheckBox[i].setChecked(true);
-                WeatherController.getInstance().setWeatherWeekStatus(true);
-            }
-        }
-    }
     @Override
     public void onClick(View v) {
 
@@ -163,7 +127,33 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 WeatherController.getInstance().setWeatherWeekStatus(weatherWeekChek.isChecked());
                 saveChekBoxPosition(weatherWeekChek.isChecked(),weatherWeekChek);
             }
-            //startActivityForResult(intent, 1);
+    }
+    void loadCheckBoxPosition() {
+        shareP = getPreferences(MODE_PRIVATE);
+
+        CheckBox [] arrCheckBox = {pressureChek,weatherDayChek,weatherWeekChek};
+        String [] arrSAVED_CHECk_BOX = {SAVED_CHECK_BOX1,SAVED_CHECK_BOX2,SAVED_CHECK_BOX3};
+        for (int i = 0; i < arrSAVED_CHECk_BOX.length ; i++) {
+
+            Boolean savedCheckBoxPosition = shareP.getBoolean(arrSAVED_CHECk_BOX[i], false);
+            if (!savedCheckBoxPosition.equals(false) && arrCheckBox[i].equals(pressureChek)) {
+                arrCheckBox[i].setChecked(true);
+                WeatherController.getInstance().setPressureStatus(true);
+            } else if (!savedCheckBoxPosition.equals(false) && arrCheckBox[i].equals(weatherDayChek)) {
+                arrCheckBox[i].setChecked(true);
+                WeatherController.getInstance().setWeatherDayStatus(true);
+            } else if (!savedCheckBoxPosition.equals(false) && arrCheckBox[i].equals(weatherWeekChek)) {
+                arrCheckBox[i].setChecked(true);
+                WeatherController.getInstance().setWeatherWeekStatus(true);
+            }
+        }
+    }
+    // метод вывода данных после сохранения при пересоздании Activity
+    private void chekBundle(Bundle savedInstanceState){
+        if (savedInstanceState != null){
+            inputCount = savedInstanceState.getString(KEY_inputCount); //извлекаем данные счетчика
+            countText.setText(inputCount);
+        }
     }
 
     //метод ожидает ответ от 2 экрана, он переопределенный

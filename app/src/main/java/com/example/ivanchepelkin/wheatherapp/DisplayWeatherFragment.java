@@ -1,6 +1,6 @@
 package com.example.ivanchepelkin.wheatherapp;
 
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.support.annotation.Nullable;
@@ -10,20 +10,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import static android.app.Activity.RESULT_OK;
 
 public class DisplayWeatherFragment extends Fragment implements View.OnClickListener {
 
     private int length = Weather.getLength();// количество выводимых строк и количесвто экземпляров Weather[];
     private int position;
-    TextView textView;
-    TextView displayPressure;
-    TextView displayWeatherDay;
-    TextView displayWeatherWeek;
+    private TextView textView;
+    private TextView displayPressure;
+    private TextView displayWeatherDay;
+    private TextView displayWeatherWeek;
 
-    Button button;
+    private Button button;
 
     static final String keySendResultPerson = "keySendResult";
     static final String textInputKey = "textInputKey";
@@ -32,8 +29,8 @@ public class DisplayWeatherFragment extends Fragment implements View.OnClickList
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        // находим наж layout под фрагмент
-        return inflater.inflate(R.layout.activity_display_wheather, container, false);
+        // находим наж layout под фрагмент, создаем фрагмент
+        return inflater.inflate(R.layout.fragment_display_wheather, container, false);
     }
 
     @Override
@@ -88,6 +85,10 @@ public class DisplayWeatherFragment extends Fragment implements View.OnClickList
         if (c) {
             displayWeatherWeek.setText(getString(R.string.ПогодаНаНеделю) + getString(R.string.двоеточие)  +weathersForCitiesArr[position].getWetherWeek());
         }
+    }
+
+    public void setWeatherDispay(int position){
+        this.position = position;
     }
     @Override
     public void onClick(View v) {
