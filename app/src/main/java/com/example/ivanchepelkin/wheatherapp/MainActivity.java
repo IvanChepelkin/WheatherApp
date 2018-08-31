@@ -1,72 +1,32 @@
 package com.example.ivanchepelkin.wheatherapp;
 
+import android.content.SharedPreferences;
 import android.support.v4.app.FragmentTransaction;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.view.View;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
-import java.lang.ref.WeakReference;
-
-public class MainActivity extends AppCompatActivity implements View.OnClickListener{
-    private static final String TAG = MainActivity.class.getSimpleName();
-
-    private RecyclerView recyclerCities;
-    private SharedPreferences shareP;
-    private CheckBox pressureChek;
-    private CheckBox weatherDayChek;
-    private CheckBox weatherWeekChek;
-    private TextView countText;
-    private int position;
-    final String SAVED_CHECK_BOX1 = "saved_chek_box1";
-    final String SAVED_CHECK_BOX2 = "saved_chek_box2";
-    final String SAVED_CHECK_BOX3 = "saved_chek_box3";
-
-
+public class MainActivity extends AppCompatActivity {
     static final int cnt_requestCode = 1;
-
-    private static final String KEY_inputCount = "KEY_inputCount";
-    private String inputCount = "";
+    private int position;
+    private SharedPreferences shareP;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.i(TAG, "запуск onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        initViews();
-        initDetaiFragment();
-        setOnClickListeners();
-        loadCheckBoxPosition();
-        chekBundle(savedInstanceState); //метод проверки bundle
+        initCitiesListFragment();
+        //loadCheckBoxPosition();
     }
-    // Метод сохранения данных при пересоздании Activity
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString(KEY_inputCount,inputCount); //сохраняю по ключу переменнуюю count
-    }
-
-
-    // метод инициаизирует вьюшки через id
-    private void initViews() {
-        recyclerCities = findViewById(R.id.recycler_Cities);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext(),LinearLayoutManager.VERTICAL,false);
-        recyclerCities.setLayoutManager(linearLayoutManager);
-        recyclerCities.setAdapter(new ListRecyclerAdapter(new WeakReference(this)));
-
-        countText = findViewById(R.id.count);
-        pressureChek = findViewById(R.id.pressureCheck);
-        weatherDayChek = findViewById(R.id.weatherDayCheck);
-        weatherWeekChek = findViewById(R.id.weatherWeekCheck);
+      //  outState.putString(KEY_inputCount,inputCount); //сохраняю по ключу переменнуюю count
     }
     // метод инициализирует фрагмент
-    private void initDetaiFragment(){
+    public  void initDetailFragment(int position){
         // создаём фрагмент
         DisplayWeatherFragment displayWeatherFragment = new DisplayWeatherFragment();
         // передаем во фрагмент position, номер города изи массива городов weathersForCitiesArr
@@ -78,92 +38,56 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         transaction.commit();
     }
 
-    private void setOnClickListeners(){
-        pressureChek.setOnClickListener(MainActivity.this);
-        weatherWeekChek.setOnClickListener(MainActivity.this);
-        weatherDayChek.setOnClickListener(MainActivity.this);
+   public void initCitiesListFragment(){
+        // создаём фрагмент
+        CitiesListFragment citiesListFragment = new CitiesListFragment();
+        // Начинаем транзакцию фрагмента через SupportFragmentManager
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        // указываем, в какой контейнер хотим поместить наш фрагмент
+        transaction.add(R.id.fragmentContainer,citiesListFragment);
+        transaction.commit();
     }
-
-    void saveChekBoxPosition(boolean position, CheckBox checkBox){
-        shareP = getPreferences(MODE_PRIVATE);//Константа MODE_PRIVATE используется для настройки доступа
-        SharedPreferences.Editor ed = shareP.edit(); //чтобы редактировать данные, необходим объект Editor
-
-        if (checkBox == pressureChek) {
-            ed.putBoolean(SAVED_CHECK_BOX1, position);
-        } else if (checkBox == weatherDayChek) {
-            ed.putBoolean(SAVED_CHECK_BOX2, position);
-        } else if (checkBox == weatherWeekChek) {
-            ed.putBoolean(SAVED_CHECK_BOX3, position);
-        }
-        ed.apply();
-    }
-
-    @Override
-    public void onClick(View v) {
-
-            if (pressureChek.isChecked()){
-                WeatherController.getInstance().setPressureStatus(pressureChek.isChecked());
-                saveChekBoxPosition(pressureChek.isChecked(),pressureChek);
-            }
-            else if (!pressureChek.isChecked()){
-                WeatherController.getInstance().setPressureStatus(pressureChek.isChecked());
-                saveChekBoxPosition(pressureChek.isChecked(),pressureChek);
-            }
-
-            if (weatherDayChek.isChecked()){
-                WeatherController.getInstance().setWeatherDayStatus(weatherDayChek.isChecked());
-                saveChekBoxPosition(weatherDayChek.isChecked(),weatherDayChek);
-            }
-            else if (!weatherDayChek.isChecked()){
-                WeatherController.getInstance().setWeatherDayStatus(weatherDayChek.isChecked());
-                saveChekBoxPosition(weatherDayChek.isChecked(),weatherDayChek);
-            }
-
-            if (weatherWeekChek.isChecked()){
-                WeatherController.getInstance().setWeatherWeekStatus(weatherWeekChek.isChecked());
-                saveChekBoxPosition(weatherWeekChek.isChecked(),weatherWeekChek);
-            }
-            else if (!weatherWeekChek.isChecked()){
-                WeatherController.getInstance().setWeatherWeekStatus(weatherWeekChek.isChecked());
-                saveChekBoxPosition(weatherWeekChek.isChecked(),weatherWeekChek);
-            }
-    }
-    void loadCheckBoxPosition() {
-        shareP = getPreferences(MODE_PRIVATE);
-
-        CheckBox [] arrCheckBox = {pressureChek,weatherDayChek,weatherWeekChek};
-        String [] arrSAVED_CHECk_BOX = {SAVED_CHECK_BOX1,SAVED_CHECK_BOX2,SAVED_CHECK_BOX3};
-        for (int i = 0; i < arrSAVED_CHECk_BOX.length ; i++) {
-
-            Boolean savedCheckBoxPosition = shareP.getBoolean(arrSAVED_CHECk_BOX[i], false);
-            if (!savedCheckBoxPosition.equals(false) && arrCheckBox[i].equals(pressureChek)) {
-                arrCheckBox[i].setChecked(true);
-                WeatherController.getInstance().setPressureStatus(true);
-            } else if (!savedCheckBoxPosition.equals(false) && arrCheckBox[i].equals(weatherDayChek)) {
-                arrCheckBox[i].setChecked(true);
-                WeatherController.getInstance().setWeatherDayStatus(true);
-            } else if (!savedCheckBoxPosition.equals(false) && arrCheckBox[i].equals(weatherWeekChek)) {
-                arrCheckBox[i].setChecked(true);
-                WeatherController.getInstance().setWeatherWeekStatus(true);
-            }
-        }
-    }
-    // метод вывода данных после сохранения при пересоздании Activity
-    private void chekBundle(Bundle savedInstanceState){
-        if (savedInstanceState != null){
-            inputCount = savedInstanceState.getString(KEY_inputCount); //извлекаем данные счетчика
-            countText.setText(inputCount);
-        }
-    }
-
+//    void saveChekBoxPosition(boolean position, CheckBox checkBox){
+//        shareP = getPreferences(MODE_PRIVATE);//Константа MODE_PRIVATE используется для настройки доступа
+//        SharedPreferences.Editor ed = shareP.edit(); //чтобы редактировать данные, необходим объект Editor
+//
+//        if (checkBox == pressureChek) {
+//            ed.putBoolean(SAVED_CHECK_BOX1, position);
+//        } else if (checkBox == weatherDayChek) {
+//            ed.putBoolean(SAVED_CHECK_BOX2, position);
+//        } else if (checkBox == weatherWeekChek) {
+//            ed.putBoolean(SAVED_CHECK_BOX3, position);
+//        }
+//        ed.apply();
+//    }
+//    void loadCheckBoxPosition() {
+//        shareP = getPreferences(MODE_PRIVATE);
+//
+//        CheckBox [] arrCheckBox = {pressureChek,weatherDayChek,weatherWeekChek};
+//        String [] arrSAVED_CHECk_BOX = {SAVED_CHECK_BOX1,SAVED_CHECK_BOX2,SAVED_CHECK_BOX3};
+//        for (int i = 0; i < arrSAVED_CHECk_BOX.length ; i++) {
+//
+//            Boolean savedCheckBoxPosition = shareP.getBoolean(arrSAVED_CHECk_BOX[i], false);
+//            if (!savedCheckBoxPosition.equals(false) && arrCheckBox[i].equals(pressureChek)) {
+//                arrCheckBox[i].setChecked(true);
+//                WeatherController.getInstance().setPressureStatus(true);
+//            } else if (!savedCheckBoxPosition.equals(false) && arrCheckBox[i].equals(weatherDayChek)) {
+//                arrCheckBox[i].setChecked(true);
+//                WeatherController.getInstance().setWeatherDayStatus(true);
+//            } else if (!savedCheckBoxPosition.equals(false) && arrCheckBox[i].equals(weatherWeekChek)) {
+//                arrCheckBox[i].setChecked(true);
+//                WeatherController.getInstance().setWeatherWeekStatus(true);
+//            }
+//        }
+//    }
     //метод ожидает ответ от 2 экрана, он переопределенный
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == cnt_requestCode) {
-            if (resultCode == RESULT_OK) {
-                inputCount = data.getStringExtra("name");
-                countText.setText(inputCount);
-            }
-        }
-    }
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        if (requestCode == cnt_requestCode) {
+//            if (resultCode == RESULT_OK) {
+//                inputCount = data.getStringExtra("name");
+//                countText.setText(inputCount);
+//            }
+//        }
+//    }
 }

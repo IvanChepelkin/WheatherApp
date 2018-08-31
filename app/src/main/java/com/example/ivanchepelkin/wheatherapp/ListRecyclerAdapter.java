@@ -3,6 +3,7 @@ package com.example.ivanchepelkin.wheatherapp;
 import android.app.Activity;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,11 +20,12 @@ public class ListRecyclerAdapter extends RecyclerView.Adapter<ListRecyclerAdapte
         this.activity = activity;
     }
 
+
     @NonNull
     @Override
 
 // Привязка layouta category_list_item к RV
-    public WeatherRecyclerViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
+    public WeatherRecyclerViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType){
         // Создаем вью из нашего layout , где мы прописывали category_list_item
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.category_list_item, viewGroup, false);
         return new WeatherRecyclerViewHolder(view);// создаем новый экземпляр класса и передаем ему созданную view
@@ -39,7 +41,7 @@ public class ListRecyclerAdapter extends RecyclerView.Adapter<ListRecyclerAdapte
         weatherRecyclerViewHolder.categoryNameTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showNailActivity(position);
+
             }
         });
     }
@@ -49,16 +51,6 @@ public class ListRecyclerAdapter extends RecyclerView.Adapter<ListRecyclerAdapte
     public int getItemCount() {
 
         return length;
-    }
-
-    private void showNailActivity(int position) {
-        if (activity.get() != null) {
-//            Intent intent = new Intent(activity.get(),DisplayWheatherActivity.class);
-//            intent.putExtra(DisplayWheatherActivity.textInputKey,position);
-//            //открываем DisplayWeatherActivity , отпраяляя intent и cnt_requestCode,
-//            // по cnt_requestCode выводим значение счетчика на MainActivity
-//            activity.get().startActivityForResult(intent,MainActivity.cnt_requestCode);
-        }
     }
 
     class WeatherRecyclerViewHolder extends RecyclerView.ViewHolder {
