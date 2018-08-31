@@ -38,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
         transaction.commit();
     }
 
+
    public void initCitiesListFragment(){
         // создаём фрагмент
         CitiesListFragment citiesListFragment = new CitiesListFragment();
