@@ -26,12 +26,13 @@ public class MainActivity extends AppCompatActivity {
       //  outState.putString(KEY_inputCount,inputCount); //сохраняю по ключу переменнуюю count
     }
     // метод инициализирует фрагмент
-    public  void initDetailFragment(int position){
+    public void initDetailFragment(int position){
         // создаём фрагмент
         DisplayWeatherFragment displayWeatherFragment = new DisplayWeatherFragment();
         // передаем во фрагмент position, номер города изи массива городов weathersForCitiesArr
         displayWeatherFragment.setWeatherDispay(position);
-        // Начинаем транзакцию фрагмента через SupportFragmentManager
+        // Начинаем транзакцию фрагмента через SupportFragmentManage
+
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         // указываем, в какой контейнер хотим поместить наш фрагмент
         transaction.add(R.id.fragmentContainer,displayWeatherFragment);
