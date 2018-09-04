@@ -16,6 +16,12 @@
             android:layout_height="wrap_content"
             android:textSize="45sp" />
 
+        <ImageView
+            android:id="@+id/imageCity"
+            android:layout_width="300dp"
+            android:layout_height="150dp"
+            android:layout_gravity="center"/>
+
         <TextView
             android:id="@+id/dispayPressure"
             android:layout_width="match_parent"

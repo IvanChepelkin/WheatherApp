@@ -9,12 +9,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 public class DisplayWeatherFragment extends Fragment implements View.OnClickListener {
 
     private int length = Weather.getLength();// количество выводимых строк и количесвто экземпляров Weather[];
     private int position;
+    private ImageView imageCity;
     private TextView textView;
     private TextView displayPressure;
     private TextView displayWeatherDay;
@@ -44,6 +46,7 @@ public class DisplayWeatherFragment extends Fragment implements View.OnClickList
     private void initViews(View view) {
         textView = view.findViewById(R.id.dispayWheather);
         button = view.findViewById(R.id.button_send_Message);
+        imageCity = view.findViewById(R.id.imageCity);
         displayPressure = view.findViewById(R.id.dispayPressure);
         displayWeatherDay = view.findViewById(R.id.dispayWeatherDay);
         displayWeatherWeek = view.findViewById(R.id.dispayWeatherWeek);
@@ -59,6 +62,8 @@ public class DisplayWeatherFragment extends Fragment implements View.OnClickList
         weathersForCitiesArr = Weather.setWeathers(weathersForCitiesArr);
         String category = weathersForCitiesArr[position].getWeatherCity();
         textView.setText(category);
+        int image = weathersForCitiesArr[position].getImageCity();
+        imageCity.setImageResource(image);
 
         boolean checkPressure = WeatherController.getInstance().isPressureStatus();
         boolean checkWeatherDay = WeatherController.getInstance().isWeatherDayStatus();

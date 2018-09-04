@@ -40,8 +40,6 @@ public class CitiesListFragment extends Fragment implements View.OnClickListener
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerCities.setLayoutManager(linearLayoutManager);
         recyclerCities.setAdapter(new ListRecyclerAdapter());
-
-        countText = rootView.findViewById(R.id.count);
         pressureChek = rootView.findViewById(R.id.pressureCheck);
         weatherDayChek = rootView.findViewById(R.id.weatherDayCheck);
         weatherWeekChek = rootView.findViewById(R.id.weatherWeekCheck);
