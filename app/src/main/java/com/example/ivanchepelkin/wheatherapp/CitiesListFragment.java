@@ -14,17 +14,13 @@ import android.widget.TextView;
 
 public class CitiesListFragment extends Fragment implements View.OnClickListener {
     private static final String TAG = MainActivity.class.getSimpleName();
-
     private RecyclerView recyclerCities;
     private CheckBox pressureChek;
     private CheckBox weatherDayChek;
-    private CheckBox weatherWeekChek;
+    public CheckBox weatherWeekChek;
     int length = Weather.getLength();// количество выводимых строк и количесвто экземпляров Weather[]
     private TextView countText;
     private String inputCount = "";
-    final String SAVED_CHECK_BOX1 = "saved_chek_box1";
-    final String SAVED_CHECK_BOX2 = "saved_chek_box2";
-    final String SAVED_CHECK_BOX3 = "saved_chek_box3";
     private static final String KEY_inputCount = "KEY_inputCount";
 
     @Nullable
@@ -33,9 +29,9 @@ public class CitiesListFragment extends Fragment implements View.OnClickListener
         View rootView = inflater.inflate(R.layout.fragment_recycler_cities, container, false);
         initViews(rootView);
         setOnClickListeners();
+        loadChekboxStatus();
         return rootView;
     }
-
 
     // метод инициаизирует вьюшки через id
     private void initViews(View rootView) {
@@ -56,33 +52,37 @@ public class CitiesListFragment extends Fragment implements View.OnClickListener
         weatherWeekChek.setOnClickListener(CitiesListFragment.this);
         weatherDayChek.setOnClickListener(CitiesListFragment.this);
     }
-
+    // метод загружает при открытии фргагмента стостояния checkBoxes
+    public  void loadChekboxStatus(){
+        pressureChek.setChecked(WeatherController.getInstance().isPressureStatus());
+        weatherDayChek.setChecked(WeatherController.getInstance().isWeatherDayStatus());
+        weatherWeekChek.setChecked(WeatherController.getInstance().isWeatherWeekStatus());
+    }
 
     @Override
     public void onClick(View v) {
 
         if (pressureChek.isChecked()) {
             WeatherController.getInstance().setPressureStatus(pressureChek.isChecked());
-            //saveChekBoxPosition(pressureChek.isChecked(),pressureChek);
+            //сохраняем состояние checkBox
+            ((MainActivity)getActivity()).saveChekBoxPosition(pressureChek.isChecked(), MainActivity.SAVED_CHECK_BOX1);
         } else if (!pressureChek.isChecked()) {
             WeatherController.getInstance().setPressureStatus(pressureChek.isChecked());
-            //saveChekBoxPosition(pressureChek.isChecked(),pressureChek);
+            ((MainActivity)getActivity()).saveChekBoxPosition(pressureChek.isChecked(), MainActivity.SAVED_CHECK_BOX1);
         }
-
         if (weatherDayChek.isChecked()) {
             WeatherController.getInstance().setWeatherDayStatus(weatherDayChek.isChecked());
-            //(weatherDayChek.isChecked(),weatherDayChek);
+            ((MainActivity)getActivity()).saveChekBoxPosition(weatherDayChek.isChecked(), MainActivity.SAVED_CHECK_BOX2);
         } else if (!weatherDayChek.isChecked()) {
             WeatherController.getInstance().setWeatherDayStatus(weatherDayChek.isChecked());
-            //saveChekBoxPosition(weatherDayChek.isChecked(),weatherDayChek);
+            ((MainActivity)getActivity()).saveChekBoxPosition(weatherDayChek.isChecked(), MainActivity.SAVED_CHECK_BOX2);
         }
-
         if (weatherWeekChek.isChecked()) {
             WeatherController.getInstance().setWeatherWeekStatus(weatherWeekChek.isChecked());
-            //  saveChekBoxPosition(weatherWeekChek.isChecked(),weatherWeekChek);
+            ((MainActivity)getActivity()).saveChekBoxPosition(weatherWeekChek.isChecked(), MainActivity.SAVED_CHECK_BOX3);
         } else if (!weatherWeekChek.isChecked()) {
             WeatherController.getInstance().setWeatherWeekStatus(weatherWeekChek.isChecked());
-            // saveChekBoxPosition(weatherWeekChek.isChecked(),weatherWeekChek);
+            ((MainActivity)getActivity()).saveChekBoxPosition(weatherWeekChek.isChecked(), MainActivity.SAVED_CHECK_BOX3);
         }
     }
 
@@ -94,21 +94,22 @@ public class CitiesListFragment extends Fragment implements View.OnClickListener
             categoryNameTextView = itemView.findViewById(R.id.category_name_text_view);
             // вешаем слушать на itemView, который пришел на вход
         }
+
         void bind(final int position) {
-                    Weather[] weathersForCitiesArr = new Weather[length];
-        weathersForCitiesArr = Weather.setWeathers(weathersForCitiesArr);
-        String category = weathersForCitiesArr[position].getCity();
-        categoryNameTextView.setText(category);
-        categoryNameTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                try {
-                    ((MainActivity) getActivity()).initDetailFragment(position);
-                } catch (NullPointerException exc) {
-                    exc.printStackTrace();
+            Weather[] weathersForCitiesArr = new Weather[length];
+            weathersForCitiesArr = Weather.setWeathers(weathersForCitiesArr);
+            String category = weathersForCitiesArr[position].getCity();
+            categoryNameTextView.setText(category);
+            categoryNameTextView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    try {
+                        ((MainActivity) getActivity()).initDetailFragment(position);
+                    } catch (NullPointerException exc) {
+                        exc.printStackTrace();
+                    }
                 }
-            }
-        });
+            });
         }
     }
 
@@ -121,19 +122,18 @@ public class CitiesListFragment extends Fragment implements View.OnClickListener
         public WeatherRecyclerViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             // Создаем вью из нашего layout , где мы прописывали category_list_item
             LayoutInflater inflater = LayoutInflater.from(getActivity());
-            return new WeatherRecyclerViewHolder(inflater,parent);// создаем новый экземпляр класса и передаем ему созданную view
+            return new WeatherRecyclerViewHolder(inflater, parent);// создаем новый экземпляр класса и передаем ему созданную view
         }
 
         @Override
         public void onBindViewHolder(@NonNull WeatherRecyclerViewHolder weatherRecyclerViewHolder, int position) {
             weatherRecyclerViewHolder.bind(position);
         }
+
         @Override
         //метод возвращает количество эл-ов в массиве городов
         public int getItemCount() {
             return length;
         }
-
-
     }
 }

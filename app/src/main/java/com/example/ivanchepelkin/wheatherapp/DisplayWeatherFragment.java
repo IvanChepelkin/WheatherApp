@@ -41,16 +41,6 @@ public class DisplayWeatherFragment extends Fragment implements View.OnClickList
         displayText(position);
     }
 
-
-//    public  void onBackPressed(){
-//        cnt = cnt +1;
-//        String cntString = String.valueOf(cnt);
-//        Intent intent = new Intent();
-//        intent.putExtra("name",cntString);
-//        setResult(RESULT_OK,intent); //передаем RESULT OK - константа успешного вызова и наш intent
-//        finish();//закрываем активность
-//    }
-
     private void initViews(View view) {
         textView = view.findViewById(R.id.dispayWheather);
         button = view.findViewById(R.id.button_send_Message);
@@ -67,22 +57,20 @@ public class DisplayWeatherFragment extends Fragment implements View.OnClickList
     private void displayText(int position) {
         Weather[] weathersForCitiesArr = new Weather[length];
         weathersForCitiesArr = Weather.setWeathers(weathersForCitiesArr);
-
         String category = weathersForCitiesArr[position].getWeatherCity();
-
         textView.setText(category);
 
-        boolean a = WeatherController.getInstance().isPressureStatus();
-        boolean b = WeatherController.getInstance().isWeatherDayStatus();
-        boolean c = WeatherController.getInstance().isWeatherWeekStatus();
+        boolean checkPressure = WeatherController.getInstance().isPressureStatus();
+        boolean checkWeatherDay = WeatherController.getInstance().isWeatherDayStatus();
+        boolean checkWetherWeek = WeatherController.getInstance().isWeatherWeekStatus();
 
-        if (a) {
+        if (checkPressure) {
             displayPressure.setText(getString(R.string.давление) + getString(R.string.двоеточие) + weathersForCitiesArr[position].getPressure());
         }
-        if (b) {
+        if (checkWeatherDay ) {
             displayWeatherDay.setText(getString(R.string.погодаНаЗавтра) + getString(R.string.двоеточие)  +weathersForCitiesArr[position].getWeatherDay());
         }
-        if (c) {
+        if (checkWetherWeek) {
             displayWeatherWeek.setText(getString(R.string.ПогодаНаНеделю) + getString(R.string.двоеточие)  +weathersForCitiesArr[position].getWetherWeek());
         }
     }

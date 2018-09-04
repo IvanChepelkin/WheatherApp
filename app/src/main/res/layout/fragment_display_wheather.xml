@@ -14,25 +14,25 @@
             android:id="@+id/dispayWheather"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="45dp" />
+            android:textSize="45sp" />
 
         <TextView
             android:id="@+id/dispayPressure"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="15dp" />
+            android:textSize="15sp" />
 
         <TextView
             android:id="@+id/dispayWeatherDay"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="15dp" />
+            android:textSize="15sp" />
 
         <TextView
             android:id="@+id/dispayWeatherWeek"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="15dp" />
+            android:textSize="15sp" />
 
         <Button
             android:id="@+id/button_send_Message"
