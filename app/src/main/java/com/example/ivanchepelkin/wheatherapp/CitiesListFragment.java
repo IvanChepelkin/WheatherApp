@@ -19,9 +19,6 @@ public class CitiesListFragment extends Fragment implements View.OnClickListener
     private CheckBox weatherDayChek;
     public CheckBox weatherWeekChek;
     int length = Weather.getLength();// количество выводимых строк и количесвто экземпляров Weather[]
-    private TextView countText;
-    private String inputCount = "";
-    private static final String KEY_inputCount = "KEY_inputCount";
 
     @Nullable
     @Override

@@ -21,12 +21,8 @@ public class DisplayWeatherFragment extends Fragment implements View.OnClickList
     private TextView displayPressure;
     private TextView displayWeatherDay;
     private TextView displayWeatherWeek;
-
     private Button button;
-
     static final String keySendResultPerson = "keySendResult";
-    static final String textInputKey = "textInputKey";
-    static int cnt = 0;
 
     @Nullable
     @Override

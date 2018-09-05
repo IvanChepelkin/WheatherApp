@@ -1,15 +1,13 @@
 package com.example.ivanchepelkin.wheatherapp;
 
 import android.content.SharedPreferences;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.widget.CheckBox;
-import android.widget.TextView;
+import android.widget.FrameLayout;
 
 public class MainActivity extends AppCompatActivity {
-    static final int cnt_requestCode = 1;
     private SharedPreferences shareP;
     final static String SAVED_CHECK_BOX1 = "saved_chek_box1";
     final static String SAVED_CHECK_BOX2 = "saved_chek_box2";
@@ -40,10 +38,13 @@ public class MainActivity extends AppCompatActivity {
 
     public void initCitiesListFragment() {
         // создаём фрагмент
-        CitiesListFragment citiesListFragment = new CitiesListFragment();
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragmentContainer, citiesListFragment);
-        transaction.commit();
+        FrameLayout container = findViewById(R.id.fragmentContainer);
+        if (container.getTag().equals("usual_display")) {
+            CitiesListFragment citiesListFragment = new CitiesListFragment();
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.fragmentContainer, citiesListFragment);
+            transaction.commit();
+        }
     }
 
     public void onBackPressed() {
