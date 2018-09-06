@@ -5,6 +5,8 @@ import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,14 +15,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 public class DisplayWeatherFragment extends Fragment implements View.OnClickListener {
-
+    private final String WEATHER_DETAILS_TAG = "ivanchepelkin.weatherapp.weatherDetailsFragment";
     private int length = Weather.getLength();// количество выводимых строк и количесвто экземпляров Weather[];
     private int position;
     private ImageView imageCity;
     private TextView textView;
-    private TextView displayPressure;
-    private TextView displayWeatherDay;
-    private TextView displayWeatherWeek;
     private Button button;
     static final String keySendResultPerson = "keySendResult";
 
@@ -36,6 +35,7 @@ public class DisplayWeatherFragment extends Fragment implements View.OnClickList
         super.onViewCreated(view, savedInstanceState);
         initViews(view);// инициализируем наши вьюшки
         setOnClickListeners();
+        initDisplayWeatherDitails();
         displayText(position);
     }
 
@@ -43,9 +43,6 @@ public class DisplayWeatherFragment extends Fragment implements View.OnClickList
         textView = view.findViewById(R.id.dispayWheather);
         button = view.findViewById(R.id.button_send_Message);
         imageCity = view.findViewById(R.id.imageCity);
-        displayPressure = view.findViewById(R.id.dispayPressure);
-        displayWeatherDay = view.findViewById(R.id.dispayWeatherDay);
-        displayWeatherWeek = view.findViewById(R.id.dispayWeatherWeek);
     }
 
     private void setOnClickListeners() {
@@ -61,24 +58,26 @@ public class DisplayWeatherFragment extends Fragment implements View.OnClickList
         int image = weathersForCitiesArr[position].getImageCity();
         imageCity.setImageResource(image);
 
-        boolean checkPressure = WeatherController.getInstance().isPressureStatus();
-        boolean checkWeatherDay = WeatherController.getInstance().isWeatherDayStatus();
-        boolean checkWetherWeek = WeatherController.getInstance().isWeatherWeekStatus();
-
-        if (checkPressure) {
-            displayPressure.setText(getString(R.string.давление) + getString(R.string.двоеточие) + weathersForCitiesArr[position].getPressure());
-        }
-        if (checkWeatherDay ) {
-            displayWeatherDay.setText(getString(R.string.погодаНаЗавтра) + getString(R.string.двоеточие)  +weathersForCitiesArr[position].getWeatherDay());
-        }
-        if (checkWetherWeek) {
-            displayWeatherWeek.setText(getString(R.string.ПогодаНаНеделю) + getString(R.string.двоеточие)  +weathersForCitiesArr[position].getWetherWeek());
-        }
     }
 
-    public void setWeatherDispay(int position){
+    // метод инициализации вложенного фрагмента
+    private void initDisplayWeatherDitails() {
+        FragmentManager fragmentManager = getChildFragmentManager();
+        WeatherDetailsFragment weatherDetailsfragment = (WeatherDetailsFragment) fragmentManager.findFragmentByTag(WEATHER_DETAILS_TAG);
+        if (weatherDetailsfragment == null) {
+            weatherDetailsfragment = new WeatherDetailsFragment();
+        }
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        weatherDetailsfragment.setPosition(position); // отправляем позицию
+        transaction.replace(R.id.weatherDetailsContainer, weatherDetailsfragment, WEATHER_DETAILS_TAG);
+        transaction.commit();
+
+    }
+
+    public void setWeatherDispay(int position) {
         this.position = position;
     }
+
     @Override
     public void onClick(View v) {
 

@@ -1,7 +1,6 @@
 package com.example.ivanchepelkin.wheatherapp;
 
 import android.content.SharedPreferences;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -54,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
             getSupportFragmentManager().popBackStack();
         }
     }
-
+ // сораняет позиции чекбоксов
     public void saveChekBoxPosition(boolean position, String SAVED_KEY) {
         shareP = getPreferences(MODE_PRIVATE);//Константа MODE_PRIVATE используется для настройки доступа
         SharedPreferences.Editor ed = shareP.edit(); //чтобы редактировать данные, необходим объект Editor
@@ -68,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
         }
         ed.apply();
     }
-
+// загружает позиции чекбоксов
     void loadCheckBoxPosition() {
         shareP = getPreferences(MODE_PRIVATE);
         String[] arrSAVED_CHECk_BOX = {SAVED_CHECK_BOX1, SAVED_CHECK_BOX2, SAVED_CHECK_BOX3};

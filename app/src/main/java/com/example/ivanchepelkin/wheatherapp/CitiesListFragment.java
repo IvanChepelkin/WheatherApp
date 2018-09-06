@@ -9,15 +9,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
 import android.widget.TextView;
 
-public class CitiesListFragment extends Fragment implements View.OnClickListener {
+public class CitiesListFragment extends Fragment {
     private static final String TAG = MainActivity.class.getSimpleName();
     private RecyclerView recyclerCities;
-    private CheckBox pressureChek;
-    private CheckBox weatherDayChek;
-    public CheckBox weatherWeekChek;
     int length = Weather.getLength();// количество выводимых строк и количесвто экземпляров Weather[]
 
     @Nullable
@@ -25,8 +21,6 @@ public class CitiesListFragment extends Fragment implements View.OnClickListener
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_recycler_cities, container, false);
         initViews(rootView);
-        setOnClickListeners();
-        loadChekboxStatus();
         return rootView;
     }
 
@@ -37,48 +31,6 @@ public class CitiesListFragment extends Fragment implements View.OnClickListener
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerCities.setLayoutManager(linearLayoutManager);
         recyclerCities.setAdapter(new ListRecyclerAdapter());
-        pressureChek = rootView.findViewById(R.id.pressureCheck);
-        weatherDayChek = rootView.findViewById(R.id.weatherDayCheck);
-        weatherWeekChek = rootView.findViewById(R.id.weatherWeekCheck);
-    }
-
-    private void setOnClickListeners() {
-        pressureChek.setOnClickListener(CitiesListFragment.this);
-        weatherWeekChek.setOnClickListener(CitiesListFragment.this);
-        weatherDayChek.setOnClickListener(CitiesListFragment.this);
-    }
-    // метод загружает при открытии фргагмента стостояния checkBoxes
-    public  void loadChekboxStatus(){
-        pressureChek.setChecked(WeatherController.getInstance().isPressureStatus());
-        weatherDayChek.setChecked(WeatherController.getInstance().isWeatherDayStatus());
-        weatherWeekChek.setChecked(WeatherController.getInstance().isWeatherWeekStatus());
-    }
-
-    @Override
-    public void onClick(View v) {
-
-        if (pressureChek.isChecked()) {
-            WeatherController.getInstance().setPressureStatus(pressureChek.isChecked());
-            //сохраняем состояние checkBox
-            ((MainActivity)getActivity()).saveChekBoxPosition(pressureChek.isChecked(), MainActivity.SAVED_CHECK_BOX1);
-        } else if (!pressureChek.isChecked()) {
-            WeatherController.getInstance().setPressureStatus(pressureChek.isChecked());
-            ((MainActivity)getActivity()).saveChekBoxPosition(pressureChek.isChecked(), MainActivity.SAVED_CHECK_BOX1);
-        }
-        if (weatherDayChek.isChecked()) {
-            WeatherController.getInstance().setWeatherDayStatus(weatherDayChek.isChecked());
-            ((MainActivity)getActivity()).saveChekBoxPosition(weatherDayChek.isChecked(), MainActivity.SAVED_CHECK_BOX2);
-        } else if (!weatherDayChek.isChecked()) {
-            WeatherController.getInstance().setWeatherDayStatus(weatherDayChek.isChecked());
-            ((MainActivity)getActivity()).saveChekBoxPosition(weatherDayChek.isChecked(), MainActivity.SAVED_CHECK_BOX2);
-        }
-        if (weatherWeekChek.isChecked()) {
-            WeatherController.getInstance().setWeatherWeekStatus(weatherWeekChek.isChecked());
-            ((MainActivity)getActivity()).saveChekBoxPosition(weatherWeekChek.isChecked(), MainActivity.SAVED_CHECK_BOX3);
-        } else if (!weatherWeekChek.isChecked()) {
-            WeatherController.getInstance().setWeatherWeekStatus(weatherWeekChek.isChecked());
-            ((MainActivity)getActivity()).saveChekBoxPosition(weatherWeekChek.isChecked(), MainActivity.SAVED_CHECK_BOX3);
-        }
     }
 
     class WeatherRecyclerViewHolder extends RecyclerView.ViewHolder {
