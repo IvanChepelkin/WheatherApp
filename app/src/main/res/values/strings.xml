@@ -11,6 +11,12 @@
     <string name="погодаНаЗавтра">Погода на завтра</string>
     <string name="ПогодаНаНеделю">Погода на неделю</string>
     <string name="двоеточие">:  </string>
+    <string name="settings">settings</string>
+    <string name="infoAboutApp">О приложении</string>
+    <string name="info">Погодное приложение "Weather" является разработкой
+        в рамках курсов Android 1 и Android2 от GeekBrains.
+    Разработчик: Чепёлкин Иван
+    Преподователь: Рыбалка Владимир</string>
 
     <!-- Создаём массив городов -->
 

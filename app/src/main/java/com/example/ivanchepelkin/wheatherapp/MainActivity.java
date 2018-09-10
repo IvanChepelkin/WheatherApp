@@ -4,9 +4,14 @@ import android.content.SharedPreferences;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
+    View view;
     private SharedPreferences shareP;
     final static String SAVED_CHECK_BOX1 = "saved_chek_box1";
     final static String SAVED_CHECK_BOX2 = "saved_chek_box2";
@@ -18,6 +23,25 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         initCitiesListFragment();
         loadCheckBoxPosition();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case R.id.info:
+                Toast.makeText(MainActivity.this, getString(R.string.info), Toast.LENGTH_LONG).show();
+                break;
+            case R.id.settings:
+
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     // метод инициализирует фрагмент
@@ -53,7 +77,8 @@ public class MainActivity extends AppCompatActivity {
             getSupportFragmentManager().popBackStack();
         }
     }
- // сораняет позиции чекбоксов
+
+    // сораняет позиции чекбоксов
     public void saveChekBoxPosition(boolean position, String SAVED_KEY) {
         shareP = getPreferences(MODE_PRIVATE);//Константа MODE_PRIVATE используется для настройки доступа
         SharedPreferences.Editor ed = shareP.edit(); //чтобы редактировать данные, необходим объект Editor
@@ -67,7 +92,8 @@ public class MainActivity extends AppCompatActivity {
         }
         ed.apply();
     }
-// загружает позиции чекбоксов
+
+    // загружает позиции чекбоксов
     void loadCheckBoxPosition() {
         shareP = getPreferences(MODE_PRIVATE);
         String[] arrSAVED_CHECk_BOX = {SAVED_CHECK_BOX1, SAVED_CHECK_BOX2, SAVED_CHECK_BOX3};
