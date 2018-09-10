@@ -7,7 +7,9 @@ import android.support.annotation.Nullable;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -43,6 +45,32 @@ public class DisplayWeatherFragment extends Fragment implements View.OnClickList
         textView = view.findViewById(R.id.dispayWheather);
         button = view.findViewById(R.id.button_send_Message);
         imageCity = view.findViewById(R.id.imageCity);
+        registerForContextMenu(imageCity);
+        registerForContextMenu(textView);
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        switch (v.getId()){
+            case R.id.imageCity:
+                menu.add(0,1,0, "Информация о городе");
+                break;
+            case R.id.dispayWheather:
+                menu.add(0,2,0,"Размер текста");
+                menu.add(0,3,0,"Цвет текста");
+        }
+        super.onCreateContextMenu(menu, v, menuInfo);
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case 2:
+                textView.setTextSize(10);
+                break;
+        }
+
+        return super.onContextItemSelected(item);
     }
 
     private void setOnClickListeners() {
@@ -60,10 +88,11 @@ public class DisplayWeatherFragment extends Fragment implements View.OnClickList
 
     }
 
-    // метод инициализации вложенного фрагмента
+    // метод инициализации вложенного фрагмента с деталями о погоде
     private void initDisplayWeatherDitails() {
         FragmentManager fragmentManager = getChildFragmentManager();
-        WeatherDetailsFragment weatherDetailsfragment = (WeatherDetailsFragment) fragmentManager.findFragmentByTag(WEATHER_DETAILS_TAG);
+        WeatherDetailsFragment weatherDetailsfragment = (WeatherDetailsFragment) fragmentManager.
+                findFragmentByTag(WEATHER_DETAILS_TAG);
         if (weatherDetailsfragment == null) {
             weatherDetailsfragment = new WeatherDetailsFragment();
         }
