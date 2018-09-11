@@ -39,7 +39,8 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this, getString(R.string.info), Toast.LENGTH_LONG).show();
                 break;
             case R.id.settings:
-
+                Toast.makeText(MainActivity.this, getString(R.string.settings), Toast.LENGTH_LONG).show();
+                break;
         }
         return super.onOptionsItemSelected(item);
     }

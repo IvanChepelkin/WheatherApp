@@ -52,12 +52,10 @@ public class DisplayWeatherFragment extends Fragment implements View.OnClickList
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         switch (v.getId()){
-            case R.id.imageCity:
-                menu.add(0,1,0, "Информация о городе");
-                break;
             case R.id.dispayWheather:
-                menu.add(0,2,0,"Размер текста");
-                menu.add(0,3,0,"Цвет текста");
+                menu.add(0,2,0,"Размер текста 24");
+                menu.add(0,3,0,"Размер текста 26");
+                menu.add(0,4,0,"Размер текста 28");
         }
         super.onCreateContextMenu(menu, v, menuInfo);
     }
@@ -66,7 +64,13 @@ public class DisplayWeatherFragment extends Fragment implements View.OnClickList
     public boolean onContextItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case 2:
-                textView.setTextSize(10);
+                textView.setTextSize(24);
+                break;
+            case 3:
+                textView.setTextSize(26);
+                break;
+            case 4:
+                textView.setTextSize(28);
                 break;
         }
 
