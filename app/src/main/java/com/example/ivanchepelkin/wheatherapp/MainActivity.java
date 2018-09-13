@@ -1,7 +1,11 @@
 package com.example.ivanchepelkin.wheatherapp;
 
 import android.content.SharedPreferences;
+import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -9,8 +13,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.Toast;
+import android.support.v7.widget.Toolbar;
 
-public class MainActivity extends AppCompatActivity {
+
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     View view;
     private SharedPreferences shareP;
     final static String SAVED_CHECK_BOX1 = "saved_chek_box1";
@@ -21,15 +27,17 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Toolbar toolbar =  findViewById(R.id.toolbar);
         initCitiesListFragment();
+        initDrawlerMenu(toolbar);
         loadCheckBoxPosition();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main_menu, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        getMenuInflater().inflate(R.menu.main_menu, menu);
+//        return super.onCreateOptionsMenu(menu);
+//    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -59,6 +67,15 @@ public class MainActivity extends AppCompatActivity {
         transaction.addToBackStack(null);
         transaction.commit();
     }
+    public void initDrawlerMenu(Toolbar toolbar){
+        DrawerLayout drawer = findViewById(R.id.drawlerLayout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+        NavigationView navigationView =  findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+    }
 
     public void initCitiesListFragment() {
         // создаём фрагмент
@@ -84,30 +101,38 @@ public class MainActivity extends AppCompatActivity {
         shareP = getPreferences(MODE_PRIVATE);//Константа MODE_PRIVATE используется для настройки доступа
         SharedPreferences.Editor ed = shareP.edit(); //чтобы редактировать данные, необходим объект Editor
 
-        if (SAVED_KEY == SAVED_CHECK_BOX1) {
+        if (SAVED_KEY.equals(SAVED_CHECK_BOX1)) {
             ed.putBoolean(SAVED_CHECK_BOX1, position);
-        } else if (SAVED_KEY == SAVED_CHECK_BOX2) {
+        } else if (SAVED_KEY.equals(SAVED_CHECK_BOX2)) {
             ed.putBoolean(SAVED_CHECK_BOX2, position);
-        } else if (SAVED_KEY == SAVED_CHECK_BOX3) {
+        } else if (SAVED_KEY.equals(SAVED_CHECK_BOX3)) {
             ed.putBoolean(SAVED_CHECK_BOX3, position);
         }
         ed.apply();
     }
 
+
     // загружает позиции чекбоксов
     void loadCheckBoxPosition() {
         shareP = getPreferences(MODE_PRIVATE);
-        String[] arrSAVED_CHECk_BOX = {SAVED_CHECK_BOX1, SAVED_CHECK_BOX2, SAVED_CHECK_BOX3};
-        for (int i = 0; i < arrSAVED_CHECk_BOX.length; i++) {
-            Boolean savedCheckBoxPosition = shareP.getBoolean(arrSAVED_CHECk_BOX[i], false);
+        String[] arrSavedCheckboxes = {SAVED_CHECK_BOX1, SAVED_CHECK_BOX2, SAVED_CHECK_BOX3};
+        for (String savedCheckBox : arrSavedCheckboxes
+                ) {
+            Boolean savedCheckBoxPosition = shareP.getBoolean(savedCheckBox, false);
 
-            if (!savedCheckBoxPosition.equals(false) && arrSAVED_CHECk_BOX[i].equals(SAVED_CHECK_BOX1)) {
+            if (!savedCheckBoxPosition.equals(false) && savedCheckBox.equals(SAVED_CHECK_BOX1)) {
                 WeatherController.getInstance().setPressureStatus(true);
-            } else if (!savedCheckBoxPosition.equals(false) && arrSAVED_CHECk_BOX[i].equals(SAVED_CHECK_BOX2)) {
+            } else if (!savedCheckBoxPosition.equals(false) && savedCheckBox.equals(SAVED_CHECK_BOX2)) {
                 WeatherController.getInstance().setWeatherDayStatus(true);
-            } else if (!savedCheckBoxPosition.equals(false) && arrSAVED_CHECk_BOX[i].equals(SAVED_CHECK_BOX3)) {
+            } else if (!savedCheckBoxPosition.equals(false) && savedCheckBox.equals(SAVED_CHECK_BOX3)) {
                 WeatherController.getInstance().setWeatherWeekStatus(true);
             }
         }
+
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        return false;
     }
 }

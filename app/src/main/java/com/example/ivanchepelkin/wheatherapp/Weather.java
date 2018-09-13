@@ -11,7 +11,7 @@ public class Weather {
             getResources().getStringArray(R.array.cityGroup);
     private static String[] weatherStringArr = WeatherApplication.context.
             getResources().getStringArray(R.array.weather);
-    private static String[] preassureStringArr = WeatherApplication.context.
+    private static String[] pressureStringArr = WeatherApplication.context.
             getResources().getStringArray(R.array.pressure);
     private static String[] weatherDayStringArr = WeatherApplication.context.
             getResources().getStringArray(R.array.weatherDay);
@@ -31,7 +31,7 @@ public class Weather {
 
     public static Weather[] setWeathers(Weather weathersForCitiesArr[]) {
         for (int i = 0; i < cityStringArr.length; i++) {
-            weathersForCitiesArr[i] = new Weather(cityStringArr[i], weatherStringArr[i], preassureStringArr[i],
+            weathersForCitiesArr[i] = new Weather(cityStringArr[i], weatherStringArr[i], pressureStringArr[i],
                     weatherDayStringArr[i], weatherWeekStringArr[i],imageList[i]);
         }
         return weathersForCitiesArr;

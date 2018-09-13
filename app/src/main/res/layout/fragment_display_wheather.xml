@@ -19,10 +19,12 @@
             android:id="@+id/imageCity"
             android:layout_width="300dp"
             android:layout_height="150dp"
-            android:layout_gravity="center"/>
+            android:layout_gravity="center" />
 
         <Button
             android:id="@+id/button_send_Message"
+            style="@style/buttonStyle"
+            android:theme="@style/colorButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
@@ -31,6 +33,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="20dp"
             android:text="@string/send_Result" />
+
         <FrameLayout
             android:id="@+id/weatherDetailsContainer"
             android:layout_width="match_parent"
