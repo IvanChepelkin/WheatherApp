@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/aboutCreator"
+            android:icon="@drawable/creator_icons"
+            android:orderInCategory="1"
+            android:title="@string/aboutCreator"
+            app:showAsAction="always" />
+        <item
+            android:id="@+id/mark"
+            android:icon="@drawable/rating_icons"
+            android:orderInCategory="1"
+            android:title="@string/mark"
+            app:showAsAction="always" />
+        <item
+            android:id="@+id/notice"
+            android:icon="@drawable/bell_icons"
+            android:orderInCategory="1"
+            android:title="@string/notice"
+            app:showAsAction="always" />
+    </group>
+</menu>

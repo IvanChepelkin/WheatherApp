@@ -31,6 +31,11 @@
         в рамках курсов Android 1 и Android2 от GeekBrains.
     Разработчик: Чепёлкин Иван
     Преподователь: Рыбалка Владимир</string>
+    <string name="aboutCreator">О разработчике</string>
+    <string name="mark">Оценить приложение</string>
+    <string name="notice">Уведомления</string>
+    <string name="gitHubRepository">https://github.com/SpartakChampion/WheatherApp</string>
+    <string name="textAboutCreator">Разработчик - начинающий программист, который очень хочет заработать много денег)))</string>
 
     <!-- Создаём массив городов -->
 

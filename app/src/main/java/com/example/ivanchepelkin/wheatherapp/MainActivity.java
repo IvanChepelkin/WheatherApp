@@ -3,6 +3,7 @@ package com.example.ivanchepelkin.wheatherapp;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -28,16 +29,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar =  findViewById(R.id.toolbar);
+
+        //исп toolbar взамен ActionBar
+        setSupportActionBar(toolbar);
         initCitiesListFragment();
         initDrawlerMenu(toolbar);
         loadCheckBoxPosition();
     }
 
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        getMenuInflater().inflate(R.menu.main_menu, menu);
-//        return super.onCreateOptionsMenu(menu);
-//    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -67,6 +71,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         transaction.addToBackStack(null);
         transaction.commit();
     }
+
     public void initDrawlerMenu(Toolbar toolbar){
         DrawerLayout drawer = findViewById(R.id.drawlerLayout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -128,11 +133,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 WeatherController.getInstance().setWeatherWeekStatus(true);
             }
         }
-
     }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        return false;
+        int id = item.getItemId();
+        switch (id){
+            case R.id.aboutCreator:
+                AboutCreatorFragment aboutCreatorFragment = new AboutCreatorFragment();
+                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                transaction.replace(R.id.fragmentContainer,aboutCreatorFragment);
+                transaction.commit();
+        }
+        return true;
     }
 }
