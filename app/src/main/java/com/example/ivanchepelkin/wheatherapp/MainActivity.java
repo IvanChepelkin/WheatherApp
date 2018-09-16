@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -145,6 +146,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 transaction.replace(R.id.fragmentContainer,aboutCreatorFragment);
                 transaction.commit();
         }
+        DrawerLayout drawer =findViewById(R.id.drawlerLayout);
+        drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 }
