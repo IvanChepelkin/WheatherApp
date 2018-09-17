@@ -13,6 +13,15 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
+    <FrameLayout
+        android:id="@+id/fragmentContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingTop="50dp"
+        android:tag="usual_display">
+
+    </FrameLayout>
+
     <android.support.design.widget.NavigationView
         android:id="@+id/nav_view"
         android:layout_width="wrap_content"
@@ -20,16 +29,6 @@
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/nav_header_main"
-        app:menu = "@menu/menu_for_drawler"/>
-
-    <FrameLayout
-        android:paddingTop="50dp"
-        android:id="@+id/fragmentContainer"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:tag="usual_display">
-
-    </FrameLayout>
-
+        app:menu="@menu/menu_for_drawler" />
 
 </android.support.v4.widget.DrawerLayout>

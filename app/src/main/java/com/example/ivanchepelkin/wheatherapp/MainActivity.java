@@ -3,7 +3,6 @@ package com.example.ivanchepelkin.wheatherapp;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -24,12 +23,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     final static String SAVED_CHECK_BOX1 = "saved_chek_box1";
     final static String SAVED_CHECK_BOX2 = "saved_chek_box2";
     final static String SAVED_CHECK_BOX3 = "saved_chek_box3";
+    final static String KeyDetailFragment = "KeyDetailFragment";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar =  findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
 
         //исп toolbar взамен ActionBar
         setSupportActionBar(toolbar);
@@ -58,6 +58,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case R.id.aboutCreator:
+                AboutCreatorFragment aboutCreatorFragment = new AboutCreatorFragment();
+                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                transaction.replace(R.id.fragmentContainer, aboutCreatorFragment);
+                transaction.addToBackStack(KeyDetailFragment);
+                transaction.commit();
+        }
+        DrawerLayout drawer = findViewById(R.id.drawlerLayout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
+
     // метод инициализирует фрагмент
     public void initDetailFragment(int position) {
         // создаём фрагмент
@@ -69,17 +85,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // указываем, в какой контейнер хотим поместить наш фрагмент
         transaction.replace(R.id.fragmentContainer, displayWeatherFragment);
         //Добавляем фрагмент в стек для возможности возврата
-        transaction.addToBackStack(null);
+        transaction.addToBackStack(KeyDetailFragment);
         transaction.commit();
     }
 
-    public void initDrawlerMenu(Toolbar toolbar){
+    public void initDrawlerMenu(Toolbar toolbar) {
         DrawerLayout drawer = findViewById(R.id.drawlerLayout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
-        NavigationView navigationView =  findViewById(R.id.nav_view);
+        NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
     }
 
@@ -98,7 +114,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onBackPressed();
         // проверяем, что backStack не пустой
         if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
-            getSupportFragmentManager().popBackStack();
+            getSupportFragmentManager().findFragmentByTag(KeyDetailFragment);
+            // getSupportFragmentManager().popBackStack();
         }
     }
 
@@ -107,16 +124,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         shareP = getPreferences(MODE_PRIVATE);//Константа MODE_PRIVATE используется для настройки доступа
         SharedPreferences.Editor ed = shareP.edit(); //чтобы редактировать данные, необходим объект Editor
 
-        if (SAVED_KEY.equals(SAVED_CHECK_BOX1)) {
-            ed.putBoolean(SAVED_CHECK_BOX1, position);
-        } else if (SAVED_KEY.equals(SAVED_CHECK_BOX2)) {
-            ed.putBoolean(SAVED_CHECK_BOX2, position);
-        } else if (SAVED_KEY.equals(SAVED_CHECK_BOX3)) {
-            ed.putBoolean(SAVED_CHECK_BOX3, position);
+        switch (SAVED_KEY) {
+            case SAVED_CHECK_BOX1:
+                ed.putBoolean(SAVED_CHECK_BOX1, position);
+                break;
+            case SAVED_CHECK_BOX2:
+                ed.putBoolean(SAVED_CHECK_BOX2, position);
+                break;
+            case SAVED_CHECK_BOX3:
+                ed.putBoolean(SAVED_CHECK_BOX3, position);
+                break;
         }
         ed.apply();
     }
-
 
     // загружает позиции чекбоксов
     void loadCheckBoxPosition() {
@@ -134,20 +154,5 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 WeatherController.getInstance().setWeatherWeekStatus(true);
             }
         }
-    }
-
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        int id = item.getItemId();
-        switch (id){
-            case R.id.aboutCreator:
-                AboutCreatorFragment aboutCreatorFragment = new AboutCreatorFragment();
-                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                transaction.replace(R.id.fragmentContainer,aboutCreatorFragment);
-                transaction.commit();
-        }
-        DrawerLayout drawer =findViewById(R.id.drawlerLayout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
     }
 }
