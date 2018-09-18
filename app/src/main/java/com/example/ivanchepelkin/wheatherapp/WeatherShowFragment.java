@@ -165,8 +165,8 @@ public class WeatherShowFragment extends Fragment {
                     break;
                 }
                 case 8: {
-                    icon = "\u2601";
-                    // icon = getString(R.string.weather_cloudy);
+//                    icon = "\u2601";
+                     icon = getString(R.string.weather_cloudy);
                     break;
                 }
             }
