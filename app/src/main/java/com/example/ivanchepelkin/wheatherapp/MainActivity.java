@@ -33,16 +33,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         //исп toolbar взамен ActionBar
         setSupportActionBar(toolbar);
-        initCitiesListFragment();
+       // initCitiesListFragment();
+        initWeatherShowFragment();
         initDrawlerMenu(toolbar);
         loadCheckBoxPosition();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main_menu, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        getMenuInflater().inflate(R.menu.menu_for_drawler, menu);
+//        return super.onCreateOptionsMenu(menu);
+//    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -106,6 +107,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             CitiesListFragment citiesListFragment = new CitiesListFragment();
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             transaction.replace(R.id.fragmentContainer, citiesListFragment);
+            transaction.commit();
+        }
+    }
+
+    public void initWeatherShowFragment(){
+        FrameLayout container = findViewById(R.id.fragmentContainer);
+        if (container.getTag().equals("usual_display")) {
+            WeatherShowFragment weatherShowFragment = new WeatherShowFragment();
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.fragmentContainer, weatherShowFragment);
             transaction.commit();
         }
     }
