@@ -1,6 +1,4 @@
 package com.example.ivanchepelkin.wheatherapp;
-
-import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Handler;
 import android.support.annotation.NonNull;
