@@ -66,28 +66,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.aboutCreator:
                 AboutCreatorFragment aboutCreatorFragment = new AboutCreatorFragment();
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                transaction.replace(R.id.fragmentContainer, aboutCreatorFragment);
                 transaction.addToBackStack(KeyDetailFragment);
+                transaction.replace(R.id.fragmentContainer, aboutCreatorFragment);
                 transaction.commit();
         }
         DrawerLayout drawer = findViewById(R.id.drawlerLayout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
-    }
-
-    // метод инициализирует фрагмент
-    public void initDetailFragment(int position) {
-        // создаём фрагмент
-        DisplayWeatherFragment displayWeatherFragment = new DisplayWeatherFragment();
-        // передаем во фрагмент position, номер города изи массива городов weathersForCitiesArr
-        displayWeatherFragment.setWeatherDispay(position);
-        // Начинаем транзакцию фрагмента через SupportFragmentManage
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        // указываем, в какой контейнер хотим поместить наш фрагмент
-        transaction.replace(R.id.fragmentContainer, displayWeatherFragment);
-        //Добавляем фрагмент в стек для возможности возврата
-        transaction.addToBackStack(KeyDetailFragment);
-        transaction.commit();
     }
 
     public void initDrawlerMenu(Toolbar toolbar) {
@@ -98,17 +83,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toggle.syncState();
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-    }
-
-    public void initCitiesListFragment() {
-        // создаём фрагмент
-        FrameLayout container = findViewById(R.id.fragmentContainer);
-        if (container.getTag().equals("usual_display")) {
-            CitiesListFragment citiesListFragment = new CitiesListFragment();
-            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.fragmentContainer, citiesListFragment);
-            transaction.commit();
-        }
     }
 
     public void initWeatherShowFragment(){

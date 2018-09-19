@@ -47,46 +47,4 @@
     <string name="place_not_found">Place not found</string>
     <string name="change_city">Change city</string>
 
-    <!-- Создаём массив городов -->
-
-    <string-array name="cityGroup">
-        <item>Москва</item>
-        <item>Санкт-Петербург</item>
-        <item>Екатеринбург</item>
-        <item>Казань</item>
-        <item>Краснодар</item>
-    </string-array>
-
-    <string-array name="weather">
-        <item>+25, Облачно </item>
-        <item>+31, Дожди </item>
-        <item>+15, Пасмурно</item>
-        <item>+19, Град</item>
-        <item>+35, Солнечно</item>
-    </string-array>
-
-    <string-array name="pressure">
-        <item>762 мм рт.ст </item>
-        <item>760 мм рт.ст </item>
-        <item>757 мм рт.ст</item>
-        <item>765 мм рт.ст</item>
-        <item>761 мм рт.ст</item>
-    </string-array>
-
-    <string-array name="weatherDay">
-        <item>+27, Ясно </item>
-        <item>+29, Дожди </item>
-        <item>+13, Облачно</item>
-        <item>+25, Солнечно</item>
-        <item>+30, Облачно</item>
-    </string-array>
-
-    <string-array name="weatherWeek">
-        <item>Всю неделю ясно </item>
-        <item>Всю неделю дожди </item>
-        <item>Всю неделю облачно</item>
-        <item>Всю неделю солнечно</item>
-        <item>Всю неделю облачно</item>
-    </string-array>
-
 </resources>

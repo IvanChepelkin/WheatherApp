@@ -1,5 +1,6 @@
 package com.example.ivanchepelkin.wheatherapp;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -19,10 +20,8 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.text.DateFormat;
 import java.util.Date;
 
@@ -40,9 +39,12 @@ public class WeatherShowFragment extends Fragment implements View.OnClickListene
     private TextView displayPressure;
     private TextView displayCloudy;
     private TextView displayHomidity;
+
     public String textPressure;
     public String textCloudy;
     public String textHomidity;
+    public String changeCity;
+    private String keyChangeCity = "keyChangeCity";
 
     @Nullable
     @Override
@@ -50,8 +52,16 @@ public class WeatherShowFragment extends Fragment implements View.OnClickListene
         View rootView = inflater.inflate(R.layout.fragment_weather_show, container, false);
         initViews(rootView);
         setOnClickListeners();
+        loadInstanceState(savedInstanceState);
         setHasOptionsMenu(true);
+        setRetainInstance(true);
         return rootView;
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(keyChangeCity,changeCity);
     }
 
     private void initViews(View rootview) {
@@ -86,11 +96,21 @@ public class WeatherShowFragment extends Fragment implements View.OnClickListene
         weatherHomidityChek.setOnClickListener(WeatherShowFragment.this);
     }
 
+    private void loadInstanceState( Bundle savedInstanceState){
+        if (savedInstanceState == null) {
+            changeCity = "Moscow";
+            updateWeatherData(changeCity);
+        } else {
+            changeCity = savedInstanceState.getString(keyChangeCity, "");
+        }
+    }
+
     private void showInputDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(R.string.change_city);
 
         final EditText input = new EditText(getActivity());
+        changeCity = input.getText().toString();
         input.setInputType(InputType.TYPE_CLASS_TEXT);
         builder.setView(input);
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -134,6 +154,7 @@ public class WeatherShowFragment extends Fragment implements View.OnClickListene
 
             setPlaceName(jsonObject);
             setDetails(details, main);
+            displayText();
             setCurrentTemp(main);
             setUpdatedText(jsonObject);
             setWeatherIcon(details.getInt("id"),
@@ -243,6 +264,25 @@ public class WeatherShowFragment extends Fragment implements View.OnClickListene
             WeatherController.getInstance().setWeatherWeekStatus(weatherHomidityChek.isChecked());
             displayHomidity.setText("");
             ((MainActivity) getActivity()).saveChekBoxPosition(weatherHomidityChek.isChecked(), MainActivity.SAVED_CHECK_BOX3);
+        }
+    }
+
+    private void displayText() {
+        boolean checkPressure = WeatherController.getInstance().isPressureStatus();
+        boolean checkCloudy = WeatherController.getInstance().isWeatherDayStatus();
+        boolean checkHomidity = WeatherController.getInstance().isWeatherWeekStatus();
+
+        if (checkPressure) {
+            pressureCheck.setChecked(true);
+            displayPressure.setText(textPressure);
+        }
+        if (checkCloudy ) {
+            weatherCloudyChek.setChecked(true);
+            displayCloudy.setText(textCloudy);
+        }
+        if (checkHomidity) {
+            weatherHomidityChek.setChecked(true);
+            displayHomidity.setText(textHomidity);
         }
     }
 }
