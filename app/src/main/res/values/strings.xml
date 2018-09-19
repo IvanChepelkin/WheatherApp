@@ -22,8 +22,8 @@
     <string name="no_app">Не найдено ни одного приложения</string>
     <string name="count_value">Количество переходов на основной экран:</string>
     <string name="давление">Давление</string>
-    <string name="погодаНаЗавтра">Погода на завтра</string>
-    <string name="ПогодаНаНеделю">Погода на неделю</string>
+    <string name="облачность">Облачность</string>
+    <string name="ПогодаВлажность">Влажность</string>
     <string name="двоеточие">:  </string>
     <string name="settings">settings</string>
     <string name="infoAboutApp">О приложении</string>

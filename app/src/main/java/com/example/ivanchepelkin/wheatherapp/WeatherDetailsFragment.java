@@ -14,7 +14,7 @@ import android.widget.TextView;
 public class WeatherDetailsFragment extends Fragment implements View.OnClickListener {
     private CheckBox pressureChek;
     private CheckBox weatherDayChek;
-    public CheckBox weatherWeekChek;
+    private CheckBox weatherWeekChek;
     private TextView displayPressure;
     private TextView displayWeatherDay;
     private TextView displayWeatherWeek;
@@ -38,11 +38,11 @@ public class WeatherDetailsFragment extends Fragment implements View.OnClickList
     // метод инициаизирует вьюшки через id
     private void initViews(View view) {
         pressureChek = view.findViewById(R.id.pressureCheck);
-        weatherDayChek = view.findViewById(R.id.weatherDayCheck);
-        weatherWeekChek = view.findViewById(R.id.weatherWeekCheck);
+        weatherDayChek = view.findViewById(R.id.weatherCloudy);
+        weatherWeekChek = view.findViewById(R.id.weatherHumidity);
         displayPressure = view.findViewById(R.id.dispayPressure);
-        displayWeatherDay = view.findViewById(R.id.dispayWeatherDay);
-        displayWeatherWeek = view.findViewById(R.id.dispayWeatherWeek);
+        displayWeatherDay = view.findViewById(R.id.dispayCloudyDay);
+        displayWeatherWeek = view.findViewById(R.id.dispayHumidityWeek);
     }
 
         private void setOnClickListeners() {
@@ -77,7 +77,7 @@ public class WeatherDetailsFragment extends Fragment implements View.OnClickList
         }
         if (weatherDayChek.isChecked()) {
             WeatherController.getInstance().setWeatherDayStatus(weatherDayChek.isChecked());
-            displayWeatherDay.setText(getString(R.string.погодаНаЗавтра) + getString(R.string.двоеточие)  +
+            displayWeatherDay.setText(getString(R.string.облачность) + getString(R.string.двоеточие)  +
                     weathersForCitiesArr[position].getWeatherDay());
             ((MainActivity)getActivity()).saveChekBoxPosition(weatherDayChek.isChecked(), MainActivity.SAVED_CHECK_BOX2);
 
@@ -88,7 +88,7 @@ public class WeatherDetailsFragment extends Fragment implements View.OnClickList
         }
         if (weatherWeekChek.isChecked()) {
             WeatherController.getInstance().setWeatherWeekStatus(weatherWeekChek.isChecked());
-            displayWeatherWeek.setText(getString(R.string.ПогодаНаНеделю) + getString(R.string.двоеточие)  +
+            displayWeatherWeek.setText(getString(R.string.ПогодаВлажность) + getString(R.string.двоеточие)  +
                     weathersForCitiesArr[position].getWetherWeek());
             ((MainActivity)getActivity()).saveChekBoxPosition(weatherWeekChek.isChecked(), MainActivity.SAVED_CHECK_BOX3);
 
@@ -113,11 +113,11 @@ public class WeatherDetailsFragment extends Fragment implements View.OnClickList
                     weathersForCitiesArr[position].getPressure());
         }
         if (checkWeatherDay ) {
-            displayWeatherDay.setText(getString(R.string.погодаНаЗавтра) + getString(R.string.двоеточие)  +
+            displayWeatherDay.setText(getString(R.string.облачность) + getString(R.string.двоеточие)  +
                     weathersForCitiesArr[position].getWeatherDay());
         }
         if (checkWetherWeek) {
-            displayWeatherWeek.setText(getString(R.string.ПогодаНаНеделю) + getString(R.string.двоеточие)  +
+            displayWeatherWeek.setText(getString(R.string.ПогодаВлажность) + getString(R.string.двоеточие)  +
                     weathersForCitiesArr[position].getWetherWeek());
         }
     }
