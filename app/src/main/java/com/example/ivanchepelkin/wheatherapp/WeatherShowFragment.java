@@ -1,5 +1,6 @@
 package com.example.ivanchepelkin.wheatherapp;
 import android.content.DialogInterface;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -18,6 +19,9 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.ivanchepelkin.wheatherapp.DateBase.NotesTable;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.text.DateFormat;
@@ -43,6 +47,11 @@ public class WeatherShowFragment extends Fragment implements View.OnClickListene
     public String textHomidity;
     public String changeCity;
     private String keyChangeCity = "keyChangeCity";
+    private SQLiteDatabase dateBase;
+
+    public void setDateBase() {
+        this.dateBase = MainActivity.dateBase;
+    }
 
     @Nullable
     @Override
@@ -53,6 +62,7 @@ public class WeatherShowFragment extends Fragment implements View.OnClickListene
         loadInstanceState(savedInstanceState);
         setHasOptionsMenu(true);
         setRetainInstance(true);
+        setDateBase();
         return rootView;
     }
 
@@ -220,13 +230,14 @@ public class WeatherShowFragment extends Fragment implements View.OnClickListene
 
     private void setDetails(JSONObject details, JSONObject main) throws JSONException {
         textPressure = main.getString("pressure") + "hPa";
-        textCloudy = details.getString("description").toUpperCase();
+        textCloudy = details.getString ("description").toUpperCase();
         textHomidity = main.getString("humidity") + "%";
     }
 
     private void setPlaceName(JSONObject jsonObject) throws JSONException {
         String cityText = jsonObject.getString("name").toUpperCase() + ", "
                 + jsonObject.getJSONObject("sys").getString("country");
+        NotesTable.addNote(cityText,dateBase);
         cityTextView.setText(cityText);
     }
 

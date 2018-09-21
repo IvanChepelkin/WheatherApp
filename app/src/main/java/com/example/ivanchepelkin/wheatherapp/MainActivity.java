@@ -1,6 +1,7 @@
 package com.example.ivanchepelkin.wheatherapp;
 
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentTransaction;
@@ -16,10 +17,13 @@ import android.widget.FrameLayout;
 import android.widget.Toast;
 import android.support.v7.widget.Toolbar;
 
+import com.example.ivanchepelkin.wheatherapp.DateBase.DateBaseHelper;
+
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     View view;
     private SharedPreferences shareP;
+    static  SQLiteDatabase dateBase;
     final static String SAVED_CHECK_BOX1 = "saved_chek_box1";
     final static String SAVED_CHECK_BOX2 = "saved_chek_box2";
     final static String SAVED_CHECK_BOX3 = "saved_chek_box3";
@@ -30,12 +34,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
-
         //исп toolbar взамен ActionBar
         setSupportActionBar(toolbar);
-       // initCitiesListFragment();
         initWeatherShowFragment();
         initDrawlerMenu(toolbar);
+        initDB();
         loadCheckBoxPosition();
     }
 
@@ -75,6 +78,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
+    public void initWeatherShowFragment() {
+        FrameLayout container = findViewById(R.id.fragmentContainer);
+        if (container.getTag().equals("usual_display")) {
+            WeatherShowFragment weatherShowFragment = new WeatherShowFragment();
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.fragmentContainer, weatherShowFragment);
+            transaction.commit();
+        }
+    }
+
     public void initDrawlerMenu(Toolbar toolbar) {
         DrawerLayout drawer = findViewById(R.id.drawlerLayout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -84,15 +97,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
     }
-
-    public void initWeatherShowFragment(){
-        FrameLayout container = findViewById(R.id.fragmentContainer);
-        if (container.getTag().equals("usual_display")) {
-            WeatherShowFragment weatherShowFragment = new WeatherShowFragment();
-            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.fragmentContainer, weatherShowFragment);
-            transaction.commit();
-        }
+// инициализируем  базу данных
+    public void initDB() {
+        dateBase = new DateBaseHelper(getApplicationContext()).getWritableDatabase();
     }
 
     public void onBackPressed() {
