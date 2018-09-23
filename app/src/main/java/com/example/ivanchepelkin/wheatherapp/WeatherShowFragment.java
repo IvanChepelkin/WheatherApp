@@ -1,4 +1,5 @@
 package com.example.ivanchepelkin.wheatherapp;
+
 import android.content.DialogInterface;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Handler;
@@ -24,6 +25,7 @@ import com.example.ivanchepelkin.wheatherapp.DateBase.NotesTable;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.text.DateFormat;
 import java.util.Date;
 
@@ -42,9 +44,13 @@ public class WeatherShowFragment extends Fragment implements View.OnClickListene
     private TextView displayCloudy;
     private TextView displayHomidity;
 
+    public String cityText;
+    public String updatedText;
     public String textPressure;
     public String textCloudy;
     public String textHomidity;
+    public String icon = "";
+    public String currentTempText;
     public String changeCity;
     private String keyChangeCity = "keyChangeCity";
     private SQLiteDatabase dateBase;
@@ -69,7 +75,7 @@ public class WeatherShowFragment extends Fragment implements View.OnClickListene
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString(keyChangeCity,changeCity);
+        outState.putString(keyChangeCity, changeCity);
     }
 
     private void initViews(View rootview) {
@@ -104,7 +110,7 @@ public class WeatherShowFragment extends Fragment implements View.OnClickListene
         weatherHomidityChek.setOnClickListener(WeatherShowFragment.this);
     }
 
-    private void loadInstanceState( Bundle savedInstanceState){
+    private void loadInstanceState(Bundle savedInstanceState) {
         if (savedInstanceState == null) {
             changeCity = "Moscow";
             updateWeatherData(changeCity);
@@ -161,23 +167,46 @@ public class WeatherShowFragment extends Fragment implements View.OnClickListene
             JSONObject main = jsonObject.getJSONObject("main");
 
             setPlaceName(jsonObject);
+            setUpdatedText(jsonObject);
             setDetails(details, main);
             displayText();
             setCurrentTemp(main);
-            setUpdatedText(jsonObject);
             setWeatherIcon(details.getInt("id"),
                     jsonObject.getJSONObject("sys").getLong("sunrise") * 1000,
                     jsonObject.getJSONObject("sys").getLong("sunset") * 1000);
+            sendWeatherToBase(); // сохраняем в БД данную
         } catch (Exception exc) {
             exc.printStackTrace();
             Log.e(LOG_TAG, "One or more fields not found in the JSON data");
         }
     }
 
+    private void setPlaceName(JSONObject jsonObject) throws JSONException {
+        cityText = jsonObject.getString("name").toUpperCase() + ", "
+                + jsonObject.getJSONObject("sys").getString("country");
+        cityTextView.setText(cityText);
+    }
+
+    private void setUpdatedText(JSONObject jsonObject) throws JSONException {
+        DateFormat dateFormat = DateFormat.getDateTimeInstance();
+        String updateOn = dateFormat.format(new Date(jsonObject.getLong("dt") * 1000));
+        updatedText = "Last update: " + updateOn;
+        updatedTextView.setText(updatedText);
+    }
+
+    private void setDetails(JSONObject details, JSONObject main) throws JSONException {
+        textPressure = main.getString("pressure") + "hPa";
+        textCloudy = details.getString("description").toUpperCase();
+        textHomidity = main.getString("humidity") + "%";
+    }
+
+    private void setCurrentTemp(JSONObject main) throws JSONException {
+        currentTempText = String.format("%.2f", main.getDouble("temp")) + "\u2103";
+        currentTemperatureTextView.setText(currentTempText);
+    }
+
     private void setWeatherIcon(int actualId, long sunrise, long sunset) {
         int id = actualId / 100;
-        String icon = "";
-
         if (actualId == 800) {
             long currentTime = new Date().getTime();
             if (currentTime >= sunrise && currentTime < sunset) {
@@ -216,29 +245,8 @@ public class WeatherShowFragment extends Fragment implements View.OnClickListene
         weatherIconTextView.setText(icon);
     }
 
-    private void setUpdatedText(JSONObject jsonObject) throws JSONException {
-        DateFormat dateFormat = DateFormat.getDateTimeInstance();
-        String updateOn = dateFormat.format(new Date(jsonObject.getLong("dt") * 1000));
-        String updatedText = "Last update: " + updateOn;
-        updatedTextView.setText(updatedText);
-    }
-
-    private void setCurrentTemp(JSONObject main) throws JSONException {
-        String currentTextText = String.format("%.2f", main.getDouble("temp")) + "\u2103";
-        currentTemperatureTextView.setText(currentTextText);
-    }
-
-    private void setDetails(JSONObject details, JSONObject main) throws JSONException {
-        textPressure = main.getString("pressure") + "hPa";
-        textCloudy = details.getString ("description").toUpperCase();
-        textHomidity = main.getString("humidity") + "%";
-    }
-
-    private void setPlaceName(JSONObject jsonObject) throws JSONException {
-        String cityText = jsonObject.getString("name").toUpperCase() + ", "
-                + jsonObject.getJSONObject("sys").getString("country");
-        NotesTable.addNote(cityText,dateBase);
-        cityTextView.setText(cityText);
+    public void sendWeatherToBase() {
+        NotesTable.addWeatherInBase(cityText, updatedText, icon, currentTempText, textPressure, textCloudy, textHomidity, dateBase);
     }
 
     @Override
@@ -285,7 +293,7 @@ public class WeatherShowFragment extends Fragment implements View.OnClickListene
             pressureCheck.setChecked(true);
             displayPressure.setText(textPressure);
         }
-        if (checkCloudy ) {
+        if (checkCloudy) {
             weatherCloudyChek.setChecked(true);
             displayCloudy.setText(textCloudy);
         }
