@@ -1,10 +1,13 @@
 package com.example.ivanchepelkin.wheatherapp;
 
+import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.os.Bundle;
@@ -53,7 +56,9 @@ public class WeatherShowFragment extends Fragment implements View.OnClickListene
     public String currentTempText;
     public String changeCity;
     private String keyChangeCity = "keyChangeCity";
+    private String keySendResult = "keySendResult";
     private SQLiteDatabase dateBase;
+    private FloatingActionButton sendMessageButton;
 
     public void setDateBase() {
         this.dateBase = MainActivity.dateBase;
@@ -89,6 +94,7 @@ public class WeatherShowFragment extends Fragment implements View.OnClickListene
         displayPressure = rootview.findViewById(R.id.dispayPressure);
         displayCloudy = rootview.findViewById(R.id.dispayCloudyDay);
         displayHomidity = rootview.findViewById(R.id.dispayHumidityWeek);
+        sendMessageButton = rootview.findViewById(R.id.sendMessageButton);
     }
 
     @Override
@@ -108,6 +114,7 @@ public class WeatherShowFragment extends Fragment implements View.OnClickListene
         pressureCheck.setOnClickListener(WeatherShowFragment.this);
         weatherCloudyChek.setOnClickListener(WeatherShowFragment.this);
         weatherHomidityChek.setOnClickListener(WeatherShowFragment.this);
+        sendMessageButton.setOnClickListener(WeatherShowFragment.this);
     }
 
     private void loadInstanceState(Bundle savedInstanceState) {
@@ -281,6 +288,19 @@ public class WeatherShowFragment extends Fragment implements View.OnClickListene
             WeatherController.getInstance().setWeatherWeekStatus(weatherHomidityChek.isChecked());
             displayHomidity.setText("");
             ((MainActivity) getActivity()).saveChekBoxPosition(weatherHomidityChek.isChecked(), MainActivity.SAVED_CHECK_BOX3);
+        }
+        if (view.getId() == R.id.sendMessageButton){
+            Intent intent = new Intent(Intent.ACTION_SEND);
+            intent.setType("text/plain");//задаем тип передаваемых данных
+            intent.putExtra(keySendResult, currentTempText);
+            String chooserTitle = getString(R.string.chooser_title);
+            Intent chosenIntent = Intent.createChooser(intent, chooserTitle);
+            try {
+                startActivity(chosenIntent);
+            } catch (ActivityNotFoundException e) {
+                Toast.makeText(getActivity(), R.string.no_app, Toast.LENGTH_SHORT).show();
+                e.printStackTrace();
+            }
         }
     }
 
