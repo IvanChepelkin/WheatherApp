@@ -2,11 +2,7 @@ package com.example.ivanchepelkin.wheatherapp.DateBase;
 
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class NotesTable {
     private final static String TABLE_NAME = "Notes";
@@ -49,6 +45,5 @@ public class NotesTable {
         values.put(COLUMN_HOMIDITY, homidity);
         database.insert(TABLE_NAME, null, values);
     }
-
 }
 

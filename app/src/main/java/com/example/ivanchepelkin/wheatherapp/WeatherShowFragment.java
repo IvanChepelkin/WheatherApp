@@ -51,7 +51,7 @@ public class WeatherShowFragment extends Fragment implements View.OnClickListene
     public String updatedText;
     public String textPressure;
     public String textCloudy;
-    public String textHomidity;
+    public String textHumidity;
     public String icon = "";
     public String currentTempText;
     public String changeCity;
@@ -83,18 +83,18 @@ public class WeatherShowFragment extends Fragment implements View.OnClickListene
         outState.putString(keyChangeCity, changeCity);
     }
 
-    private void initViews(View rootview) {
-        cityTextView = rootview.findViewById(R.id.city_field);
-        updatedTextView = rootview.findViewById(R.id.updated_field);
-        currentTemperatureTextView = rootview.findViewById(R.id.current_temperature_field);
-        weatherIconTextView = rootview.findViewById(R.id.weather_icon);
-        pressureCheck = rootview.findViewById(R.id.pressureCheck);
-        weatherCloudyChek = rootview.findViewById(R.id.weatherCloudy);
-        weatherHomidityChek = rootview.findViewById(R.id.weatherHumidity);
-        displayPressure = rootview.findViewById(R.id.dispayPressure);
-        displayCloudy = rootview.findViewById(R.id.dispayCloudyDay);
-        displayHomidity = rootview.findViewById(R.id.dispayHumidityWeek);
-        sendMessageButton = rootview.findViewById(R.id.sendMessageButton);
+    private void initViews(View review) {
+        cityTextView = review.findViewById(R.id.city_field);
+        updatedTextView = review.findViewById(R.id.updated_field);
+        currentTemperatureTextView = review.findViewById(R.id.current_temperature_field);
+        weatherIconTextView = review.findViewById(R.id.weather_icon);
+        pressureCheck = review.findViewById(R.id.pressureCheck);
+        weatherCloudyChek = review.findViewById(R.id.weatherCloudy);
+        weatherHomidityChek = review.findViewById(R.id.weatherHumidity);
+        displayPressure = review.findViewById(R.id.dispayPressure);
+        displayCloudy = review.findViewById(R.id.dispayCloudyDay);
+        displayHomidity = review.findViewById(R.id.dispayHumidityWeek);
+        sendMessageButton = review.findViewById(R.id.sendMessageButton);
     }
 
     @Override
@@ -204,7 +204,7 @@ public class WeatherShowFragment extends Fragment implements View.OnClickListene
     private void setDetails(JSONObject details, JSONObject main) throws JSONException {
         textPressure = main.getString("pressure") + "hPa";
         textCloudy = details.getString("description").toUpperCase();
-        textHomidity = main.getString("humidity") + "%";
+        textHumidity = main.getString("humidity") + "%";
     }
 
     private void setCurrentTemp(JSONObject main) throws JSONException {
@@ -253,7 +253,7 @@ public class WeatherShowFragment extends Fragment implements View.OnClickListene
     }
 
     public void sendWeatherToBase() {
-        NotesTable.addWeatherInBase(cityText, updatedText, icon, currentTempText, textPressure, textCloudy, textHomidity, dateBase);
+        NotesTable.addWeatherInBase(cityText, updatedText, icon, currentTempText, textPressure, textCloudy, textHumidity, dateBase);
     }
 
     @Override
@@ -281,7 +281,7 @@ public class WeatherShowFragment extends Fragment implements View.OnClickListene
         }
         if (weatherHomidityChek.isChecked()) {
             WeatherController.getInstance().setWeatherWeekStatus(weatherHomidityChek.isChecked());
-            displayHomidity.setText(textHomidity);
+            displayHomidity.setText(textHumidity);
             ((MainActivity) getActivity()).saveChekBoxPosition(weatherHomidityChek.isChecked(), MainActivity.SAVED_CHECK_BOX3);
 
         } else if (!weatherHomidityChek.isChecked()) {
@@ -289,7 +289,7 @@ public class WeatherShowFragment extends Fragment implements View.OnClickListene
             displayHomidity.setText("");
             ((MainActivity) getActivity()).saveChekBoxPosition(weatherHomidityChek.isChecked(), MainActivity.SAVED_CHECK_BOX3);
         }
-        if (view.getId() == R.id.sendMessageButton){
+        if (view.getId() == R.id.sendMessageButton) {
             Intent intent = new Intent(Intent.ACTION_SEND);
             intent.setType("text/plain");//задаем тип передаваемых данных
             intent.putExtra(keySendResult, currentTempText);
@@ -319,7 +319,7 @@ public class WeatherShowFragment extends Fragment implements View.OnClickListene
         }
         if (checkHomidity) {
             weatherHomidityChek.setChecked(true);
-            displayHomidity.setText(textHomidity);
+            displayHomidity.setText(textHumidity);
         }
     }
 }
