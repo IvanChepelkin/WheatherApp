@@ -4,6 +4,7 @@ import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
+import android.location.Location;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -59,6 +60,7 @@ public class WeatherShowFragment extends Fragment implements View.OnClickListene
     private String keySendResult = "keySendResult";
     private SQLiteDatabase dateBase;
     private FloatingActionButton sendMessageButton;
+    private Location loc;
 
     public void setDateBase() {
         this.dateBase = MainActivity.dateBase;
@@ -249,7 +251,8 @@ public class WeatherShowFragment extends Fragment implements View.OnClickListene
                 }
             }
         }
-        weatherIconTextView.setText(icon);
+        //weatherIconTextView.setText(icon);
+        weatherIconTextView.setText(MainActivity.mAddress);
     }
 
     public void sendWeatherToBase() {

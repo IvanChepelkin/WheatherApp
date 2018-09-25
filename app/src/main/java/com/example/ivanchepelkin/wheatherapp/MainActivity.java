@@ -1,7 +1,13 @@
 package com.example.ivanchepelkin.wheatherapp;
 
+import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentTransaction;
@@ -10,6 +16,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,11 +26,22 @@ import android.support.v7.widget.Toolbar;
 
 import com.example.ivanchepelkin.wheatherapp.DateBase.DateBaseHelper;
 
+import java.io.IOException;
+import java.util.List;
+
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+
+    private final String TAG = "LOCATION";
+    private final String MSG_NO_DATA = "No data";
+    public static String mAddress;
+    private LocationManager mLocManager = null;
+    public Location loc;
+    // private CoordinatesCity.LocListener mLocListener = null;
+
     View view;
     private SharedPreferences shareP;
-    static  SQLiteDatabase dateBase;
+    static SQLiteDatabase dateBase;
     final static String SAVED_CHECK_BOX1 = "saved_chek_box1";
     final static String SAVED_CHECK_BOX2 = "saved_chek_box2";
     final static String SAVED_CHECK_BOX3 = "saved_chek_box3";
@@ -40,6 +58,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         initDrawlerMenu(toolbar);
         initDB();
         loadCheckBoxPosition();
+        getCoordinates();
     }
 
 //    @Override
@@ -97,7 +116,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
     }
-// инициализируем  базу данных
+
+    // инициализируем  базу данных
     public void initDB() {
         dateBase = new DateBaseHelper(getApplicationContext()).getWritableDatabase();
     }
@@ -146,5 +166,82 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 WeatherController.getInstance().setWeatherWeekStatus(true);
             }
         }
+    }
+
+    @SuppressLint("MissingPermission")
+    public String getCoordinates() {
+        System.out.println("здесь норм");
+        mLocManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        //записываем координаты в переменную loc через менеджер
+        loc = mLocManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+     //   loc = mLocManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+     //   loc = mLocManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
+        System.out.println("А здесь фигня");
+        // Request address by location
+        if (loc != null) {
+            mAddress = getAddressByLoc(loc);
+        }
+        return mAddress;
+    }
+
+    private String getAddressByLoc(Location loc) {
+
+        // Create geocoder
+        final Geocoder geo = new Geocoder(this);
+        // Try to get addresses list
+        List<Address> list;
+        try {
+            list = geo.getFromLocation(loc.getLatitude(), loc.getLongitude(), 1);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return e.getLocalizedMessage();
+        }
+        // If list is empty, return "No data" string
+        if (list.isEmpty()) {
+            return MSG_NO_DATA;
+        }
+        // Get first element from List
+        Address a = list.get(0);
+        // Make address string
+        return String.valueOf(a.getLocale());
+    }
+
+//    @SuppressLint("MissingPermission")
+//    @Override
+//    protected void onResume() {
+//        // Invoke a parent method, at first
+//        super.onResume();
+//        // Create Location Listener object (if needed)
+//        if (mLocListener == null) mLocListener = new CoordinatesCity.LocListener();
+//        // Setting up Location Listener
+//        // min time - 3 seconds
+//        // min distance - 1 meter
+//        mLocManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
+//                3000L, 1.0F, mLocListener);
+//    }
+//
+//    @Override
+//    protected void onPause() {
+//        // Remove Location Listener
+//        if (mLocListener != null) mLocManager.removeUpdates(mLocListener);
+//        // Invoke a parent method
+//        super.onPause();
+//    }
+
+    private final class LocListener implements LocationListener {
+        @Override
+        public void onLocationChanged(Location location) {
+            Log.d(TAG, "onLocationChanged: " + location.toString());
+
+        }
+
+        @Override
+        public void onStatusChanged(String provider, int status, Bundle extras) { /* Empty */ }
+
+        @Override
+        public void onProviderEnabled(String provider) { /* Empty */ }
+
+        @Override
+        public void onProviderDisabled(String provider) { /* Empty */ }
     }
 }
