@@ -252,9 +252,9 @@ public class WeatherShowFragment extends Fragment implements View.OnClickListene
             }
         }
         //weatherIconTextView.setText(icon);
-        weatherIconTextView.setText(MainActivity.mAddress);
+        weatherIconTextView.setText(CoordinatesCity.instance.getCoordinates());
     }
-
+// сохраняем в БД данные по погоде и город
     public void sendWeatherToBase() {
         NotesTable.addWeatherInBase(cityText, updatedText, icon, currentTempText, textPressure, textCloudy, textHumidity, dateBase);
     }
@@ -306,7 +306,7 @@ public class WeatherShowFragment extends Fragment implements View.OnClickListene
             }
         }
     }
-
+// загружаем детали погоды относительно состояния чекбоксов
     private void displayText() {
         boolean checkPressure = WeatherController.getInstance().isPressureStatus();
         boolean checkCloudy = WeatherController.getInstance().isWeatherDayStatus();

@@ -1,25 +1,31 @@
 package com.example.ivanchepelkin.wheatherapp;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import java.io.IOException;
 import java.util.List;
 
-public class CoordinatesCity extends Activity {
+public class CoordinatesCity extends AppCompatActivity {
 
     public static CoordinatesCity instance = new CoordinatesCity();
 
     private final String TAG = "LOCATION";
     private final String MSG_NO_DATA = "No data";
     public String mAddress;
+    Location loc;
     private LocationManager mLocManager = null;
     private LocListener mLocListener = null;
 
@@ -31,15 +37,20 @@ public class CoordinatesCity extends Activity {
 //    }
 
     @SuppressLint("MissingPermission")
-    public String getCoordinates(Location loc) {
+    public String getCoordinates() {
         System.out.println("здесь норм");
-        mLocManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        //записываем координаты в переменную loc через менеджер
-       // loc = mLocManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-       // loc = mLocManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        assert mLocManager != null;
-        loc = mLocManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
-        System.out.println("А здесь фигня");
+
+        //записываем координаты в переменную lc через менеджер
+
+        if (hasPermissions()) {
+            mLocManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+            loc = mLocManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+            loc = mLocManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            loc = mLocManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
+        } else {
+            //requestPermissionWithRationale();
+        }
+
         // Request address by location
         if (loc != null) {
             mAddress = getAddressByLoc(loc);
@@ -67,6 +78,24 @@ public class CoordinatesCity extends Activity {
         Address a = list.get(0);
         // Make address string
         return String.valueOf(a.getLocale());
+    }
+
+    // Проверяем, есть ли наше разрешение
+    private boolean hasPermissions() {
+        int res = 0;
+        //string array of permissions,
+        String[] permissions = new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.INTERNET};
+
+        for (String perms : permissions) {
+            res = checkCallingOrSelfPermission(perms);
+            // PackageManager.PERMISSION_GRANTED в случае если разрешение есть
+            if (!(res == PackageManager.PERMISSION_GRANTED)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     @SuppressLint("MissingPermission")
