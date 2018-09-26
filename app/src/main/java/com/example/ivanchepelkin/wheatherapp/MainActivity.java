@@ -11,12 +11,9 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.net.Uri;
 import android.os.Build;
-import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
@@ -25,7 +22,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -44,6 +40,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private final String MSG_NO_DATA = "No data";
     public static String mAddress;
     private LocationManager mLocManager = null;
+    private LocListener mLocListener = null;
     public Location loc;
     private static final int PERMISSION_REQUEST_CODE = 123;
     // private CoordinatesCity.LocListener mLocListener = null;
@@ -69,12 +66,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         loadCheckBoxPosition();
         getCoordinates();
     }
-
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        getMenuInflater().inflate(R.menu.menu_for_drawler, menu);
-//        return super.onCreateOptionsMenu(menu);
-//    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -106,7 +97,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-// Инициализация фрагмента с текстом погоды
+
+    // Инициализация фрагмента с текстом погоды
     public void initWeatherShowFragment() {
         FrameLayout container = findViewById(R.id.fragmentContainer);
         if (container.getTag().equals("usual_display")) {
@@ -177,29 +169,27 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         }
     }
+
+    // получаем по геопозиции наш город города
     @SuppressLint("MissingPermission")
     public String getCoordinates() {
         System.out.println("здесь норм");
 
-        //записываем координаты в переменную lc через менеджер
-
+        // Если есть разрешение
         if (hasPermissions()) {
-           makeFolder();
+            getTextCity();
         } else {
-            requestPermissionWithRationale();
+            //если нет, то вызываем окно разрешения
+            requestPerms();
         }
-
-        // Request address by location
-
         return mAddress;
     }
-
 
 
     // Проверяем, есть ли наше разрешение
     private boolean hasPermissions() {
         int res = 0;
-        //string array of permissions,
+        // массив разрешений
         String[] permissions = new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,
                 Manifest.permission.ACCESS_FINE_LOCATION,
                 Manifest.permission.INTERNET};
@@ -213,8 +203,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
         return true;
     }
+
     @SuppressLint("MissingPermission")
-    private void makeFolder(){
+    private void getTextCity() {
         mLocManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         loc = mLocManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
         loc = mLocManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
@@ -224,10 +215,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
+    // вытаскиваем город из нашей геолокации
     private String getAddressyBLoc(Location loc) {
         // Create geocoder
         final Geocoder geo = new Geocoder(this);
-        // Try to get addresses list
         List<Address> list;
         try {
             list = geo.getFromLocation(loc.getLatitude(), loc.getLongitude(), 1);
@@ -239,30 +230,32 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (list.isEmpty()) {
             return MSG_NO_DATA;
         }
-        // Get first element from List
         Address a = list.get(0);
         // Make address string
-        return String.valueOf(a.getLocale());
+        return String.valueOf(a.getLocality());
     }
 
-    private void requestPerms(){
+    private void requestPerms() {
         String[] permissions = new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,
                 Manifest.permission.ACCESS_FINE_LOCATION,
                 Manifest.permission.INTERNET};
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
-            requestPermissions(permissions,PERMISSION_REQUEST_CODE);
+        // проверяем версию устройства и выполняем запрос разрешения
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            // после вызова  requestPermissions отображается окно с запросом разрешения
+            requestPermissions(permissions, PERMISSION_REQUEST_CODE);
         }
     }
 
+    // сюда приходит ответ на разрешение
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         boolean allowed = true;
 
-        switch (requestCode){
+        switch (requestCode) {
             case PERMISSION_REQUEST_CODE:
 
-                for (int res : grantResults){
-                    // if user granted all permissions.
+                for (int res : grantResults) {
+                    // пользователь предоставил разрешение ?
                     allowed = allowed && (res == PackageManager.PERMISSION_GRANTED);
                 }
 
@@ -272,101 +265,28 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 allowed = false;
                 break;
         }
-
-        if (allowed){
-            //user granted all permissions we can perform our task.
-            makeFolder();
+        // если да, то вызываем getTextCity()
+        if (allowed) {
+            getTextCity();
+        } else {
+            mAddress = "Москва";
         }
-        else {
-            // we will give warning to user that they haven't granted permissions.
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                if (shouldShowRequestPermissionRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE)){
-                    Toast.makeText(this, "Storage Permissions denied.", Toast.LENGTH_SHORT).show();
-
-                } else {
-                    showNoStoragePermissionSnackbar();
-                }
-            }
-        }
-
-    }
-
-
-
-    public void showNoStoragePermissionSnackbar() {
-//        Snackbar.make(MainActivity.this.findViewById(R.id.activity_view), "Storage permission isn't granted" , Snackbar.LENGTH_LONG)
-//                .setAction("SETTINGS", new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        openApplicationSettings();
-//
-//                        Toast.makeText(getApplicationContext(),
-//                                "Open Permissions and grant the Storage permission",
-//                                Toast.LENGTH_SHORT)
-//                                .show();
-//                    }
-//                })
-//                .show();
-    }
-
-    public void openApplicationSettings() {
-        Intent appSettingsIntent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-                Uri.parse("package:" + getPackageName()));
-        startActivityForResult(appSettingsIntent, PERMISSION_REQUEST_CODE);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == PERMISSION_REQUEST_CODE) {
-            makeFolder();
+            getTextCity();
             return;
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
-    public void requestPermissionWithRationale() {
-        if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                Manifest.permission.READ_EXTERNAL_STORAGE)) {
-//            final String message = "Storage permission is needed to show files count";
-//            Snackbar.make(MainActivity.this.findViewById(R.id.activity_view), message, Snackbar.LENGTH_LONG)
-//                    .setAction("GRANT", new View.OnClickListener() {
-//                        @Override
-//                        public void onClick(View v) {
-//                            requestPerms();
-//                        }
-//                    })
-//                    .show();
-        } else {
-            requestPerms();
-        }
-    }
-
-//    @SuppressLint("MissingPermission")
-//    @Override
-//    protected void onResume() {
-//        // Invoke a parent method, at first
-//        super.onResume();
-//        // Create Location Listener object (if needed)
-//        if (mLocListener == null) mLocListener = new CoordinatesCity.LocListener();
-//        // Setting up Location Listener
-//        // min time - 3 seconds
-//        // min distance - 1 meter
-//        mLocManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
-//                3000L, 1.0F, mLocListener);
-//    }
-//
-//    @Override
-//    protected void onPause() {
-//        // Remove Location Listener
-//        if (mLocListener != null) mLocManager.removeUpdates(mLocListener);
-//        // Invoke a parent method
-//        super.onPause();
-//    }
 
     private final class LocListener implements LocationListener {
         @Override
         public void onLocationChanged(Location location) {
             Log.d(TAG, "onLocationChanged: " + location.toString());
-
+            mAddress = getAddressyBLoc(location);
         }
 
         @Override

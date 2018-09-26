@@ -60,7 +60,6 @@ public class WeatherShowFragment extends Fragment implements View.OnClickListene
     private String keySendResult = "keySendResult";
     private SQLiteDatabase dateBase;
     private FloatingActionButton sendMessageButton;
-    private Location loc;
 
     public void setDateBase() {
         this.dateBase = MainActivity.dateBase;
@@ -118,10 +117,10 @@ public class WeatherShowFragment extends Fragment implements View.OnClickListene
         weatherHomidityChek.setOnClickListener(WeatherShowFragment.this);
         sendMessageButton.setOnClickListener(WeatherShowFragment.this);
     }
-
+    // Выводим погоду при запуске приложения
     private void loadInstanceState(Bundle savedInstanceState) {
         if (savedInstanceState == null) {
-            changeCity = "Moscow";
+            changeCity = MainActivity.mAddress;
             updateWeatherData(changeCity);
         } else {
             changeCity = savedInstanceState.getString(keyChangeCity, "");
@@ -251,8 +250,7 @@ public class WeatherShowFragment extends Fragment implements View.OnClickListene
                 }
             }
         }
-        //weatherIconTextView.setText(icon);
-        weatherIconTextView.setText(CoordinatesCity.instance.getCoordinates());
+        weatherIconTextView.setText(icon);
     }
 // сохраняем в БД данные по погоде и город
     public void sendWeatherToBase() {
