@@ -2,6 +2,7 @@ package com.example.ivanchepelkin.wheatherapp;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.FragmentManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -14,7 +15,6 @@ import android.location.LocationManager;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -36,8 +36,6 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-    private final String TAG = "LOCATION";
-    private final String MSG_NO_DATA = "No data";
     public static String mAddress;
     private LocationManager mLocManager = null;
     private LocListener mLocListener = null;
@@ -59,12 +57,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         //исп toolbar взамен ActionBar
+        getCoordinates();
         setSupportActionBar(toolbar);
         initWeatherShowFragment();
         initDrawlerMenu(toolbar);
         initDB();
         loadCheckBoxPosition();
-        getCoordinates();
     }
 
     @Override
@@ -228,7 +226,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
         // If list is empty, return "No data" string
         if (list.isEmpty()) {
-            return MSG_NO_DATA;
+            return "No data";
         }
         Address a = list.get(0);
         // Make address string
@@ -285,6 +283,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private final class LocListener implements LocationListener {
         @Override
         public void onLocationChanged(Location location) {
+            String TAG = "LOCATION";
             Log.d(TAG, "onLocationChanged: " + location.toString());
             mAddress = getAddressyBLoc(location);
         }

@@ -57,7 +57,6 @@ public class WeatherShowFragment extends Fragment implements View.OnClickListene
     public String currentTempText;
     public String changeCity;
     private String keyChangeCity = "keyChangeCity";
-    private String keySendResult = "keySendResult";
     private SQLiteDatabase dateBase;
     private FloatingActionButton sendMessageButton;
 
@@ -76,12 +75,6 @@ public class WeatherShowFragment extends Fragment implements View.OnClickListene
         setRetainInstance(true);
         setDateBase();
         return rootView;
-    }
-
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putString(keyChangeCity, changeCity);
     }
 
     private void initViews(View review) {
@@ -117,13 +110,21 @@ public class WeatherShowFragment extends Fragment implements View.OnClickListene
         weatherHomidityChek.setOnClickListener(WeatherShowFragment.this);
         sendMessageButton.setOnClickListener(WeatherShowFragment.this);
     }
-    // Выводим погоду при запуске приложения
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(keyChangeCity, cityText);
+    }
+
+//     Выводим погоду при запуске приложения
     private void loadInstanceState(Bundle savedInstanceState) {
         if (savedInstanceState == null) {
+            // загружаем погоду для города, кот нашли на геопозиции
             changeCity = MainActivity.mAddress;
             updateWeatherData(changeCity);
         } else {
             changeCity = savedInstanceState.getString(keyChangeCity, "");
+            updateWeatherData(changeCity);
         }
     }
 
@@ -252,7 +253,8 @@ public class WeatherShowFragment extends Fragment implements View.OnClickListene
         }
         weatherIconTextView.setText(icon);
     }
-// сохраняем в БД данные по погоде и город
+
+    // сохраняем в БД данные по погоде и город
     public void sendWeatherToBase() {
         NotesTable.addWeatherInBase(cityText, updatedText, icon, currentTempText, textPressure, textCloudy, textHumidity, dateBase);
     }
@@ -293,7 +295,7 @@ public class WeatherShowFragment extends Fragment implements View.OnClickListene
         if (view.getId() == R.id.sendMessageButton) {
             Intent intent = new Intent(Intent.ACTION_SEND);
             intent.setType("text/plain");//задаем тип передаваемых данных
-            intent.putExtra(keySendResult, currentTempText);
+            intent.putExtra(Intent.EXTRA_TEXT, currentTempText);
             String chooserTitle = getString(R.string.chooser_title);
             Intent chosenIntent = Intent.createChooser(intent, chooserTitle);
             try {
@@ -304,7 +306,8 @@ public class WeatherShowFragment extends Fragment implements View.OnClickListene
             }
         }
     }
-// загружаем детали погоды относительно состояния чекбоксов
+
+    // загружаем детали погоды относительно состояния чекбоксов
     private void displayText() {
         boolean checkPressure = WeatherController.getInstance().isPressureStatus();
         boolean checkCloudy = WeatherController.getInstance().isWeatherDayStatus();
